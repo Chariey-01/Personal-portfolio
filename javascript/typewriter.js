@@ -3,7 +3,7 @@
    ============================================= */
 
 const el    = document.getElementById('typedName');
-const names = ['Chariey.', 'a Builder.', 'a Creator.', 'Chariey.'];
+const names = ['Charity.', 'a Builder.', 'a Creator.', 'Jepkoech.'];
 let nameIdx = 0, charIdx = 0, deleting = false;
 
 function type() {
