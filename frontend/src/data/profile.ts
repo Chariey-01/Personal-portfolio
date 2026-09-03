@@ -1,57 +1,47 @@
-import type { Link, Project, SkillGroup, TimelineItem } from "../types/portfolio";
+import type { Profile, Project, TimelineItem } from "../types/portfolio";
 
-export const profile = {
+export const profile: Profile = {
   name: "Charity Jepkoech",
   alias: "Chariey",
   location: "Nairobi, Kenya",
   role: "Full Stack Software Engineer",
   email: "charityjepkoech007@gmail.com",
-  resumeUrl:
-    "https://docs.google.com/document/d/1mq5TU1nlRbyqxIw4jSzwdRa3av-gFaEES8tuF-1zmK8/edit?usp=sharing",
+  headline: "I am building toward full-stack product engineering.",
+  bio: "I build React interfaces, Flask APIs, and database-backed projects. My current work is focused on clear state, readable backend logic, and deployable full-stack applications.",
+  story:
+    "My path into engineering has not been perfectly linear, but I kept building. I first studied Computer Science at Egerton University, where I gained early foundations, even though that university path was interrupted before completion. I later chose a more deliberate software-engineering route through Moringa School and through the work that has taught me the most: building applications, breaking them, rebuilding them, and learning in public. I tend to aim higher than my current level, which means I am often working on projects that stretch me. That has made me persistent, practical, and serious about becoming a stronger full-stack engineer.",
+  profileImage: "/images/profile/charity-jepkoech.png",
+  profileImageAlt: "Portrait of Charity Jepkoech",
+  availability: "Open to full-stack software engineering opportunities",
+  focusStack: ["React", "TypeScript", "Flask", "SQLAlchemy", "pytest"],
+  resumeUrl: null,
+  cvUrl: null,
+  coverLetterUrl: null,
   links: [
     { label: "GitHub", href: "https://github.com/Chariey-01" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/charity-jepkoech-91b5b6330" },
     { label: "Vercel", href: "https://vercel.com/chariey-01s-projects" },
-  ] satisfies Link[],
+  ],
 };
-
-export const skillGroups: SkillGroup[] = [
-  {
-    category: "Frontend",
-    items: ["JavaScript", "TypeScript", "React", "HTML", "CSS", "Tailwind CSS"],
-  },
-  {
-    category: "Backend",
-    items: ["Python", "Flask", "REST APIs", "SQLAlchemy", "CLI applications"],
-  },
-  {
-    category: "Data",
-    items: ["PostgreSQL", "SQLite", "schema design", "query modeling"],
-  },
-  {
-    category: "Engineering",
-    items: ["Git", "GitHub", "pytest", "CI/CD", "deployment workflows"],
-  },
-];
 
 export const projects: Project[] = [
   {
     title: "AuRevia",
-    status: "shipped",
+    status: "Live",
     summary:
-      "Collaborative e-commerce SPA with routed product flows, cart state, admin-style management screens, and a canvas-led landing experience.",
+      "Team e-commerce SPA with routed catalog, product, cart, and management screens. My focus was frontend flow, shared UI consistency, and stateful shopping interactions.",
     role: "Frontend engineer on a team project",
     stack: ["React", "React Router", "JSON Server", "Canvas API", "CSS", "Git"],
     problem:
-      "Create a product-shopping experience that demonstrates route design, stateful UI, and team collaboration.",
+      "Build a product-shopping flow that keeps catalog browsing, cart behavior, and management screens understandable across routes.",
     architecture: [
       "React Router separates landing, catalog, product, cart, and management views.",
-      "JSON Server provides a local REST-shaped data layer for CRUD practice.",
-      "Reusable UI components keep product cards, navigation, and forms consistent.",
+      "JSON Server gives the frontend a REST-shaped data layer for CRUD practice.",
+      "Shared components keep product cards, navigation, and forms consistent across team contributions.",
     ],
     highlights: [
       "Cart-oriented interaction design",
-      "Client-side CRUD workflow",
+      "Client-side CRUD workflow against a local API shape",
       "Canvas animation used as enhancement rather than core navigation",
     ],
     technicalChallenges: [
@@ -63,15 +53,15 @@ export const projects: Project[] = [
   },
   {
     title: "Learning Roadmap App",
-    status: "shipped",
+    status: "Live",
     summary:
-      "Personal full-stack learning tracker focused on progress visibility, streaks, achievements, and lightweight persistence.",
+      "Solo learning tracker for roadmap progress, streaks, achievements, and local persistence. The project is strongest as a React state and responsive UI exercise.",
     role: "Solo developer",
     stack: ["React", "Tailwind CSS", "Vercel", "local persistence"],
     problem:
-      "Help a learner translate long-term study goals into visible daily progress and momentum.",
+      "Turn a long learning plan into daily progress a learner can actually see and update.",
     architecture: [
-      "Componentized React interface organizes roadmap, progress, streaks, and badges.",
+      "Componentized React interface separates roadmap, progress, streak, and badge views.",
       "Stateful interactions keep learning progress visible without leaving the page.",
       "Vercel deployment keeps the project simple to share and review.",
     ],
@@ -85,13 +75,13 @@ export const projects: Project[] = [
   },
   {
     title: "Python Project Management CLI",
-    status: "shipped",
+    status: "Completed",
     summary:
-      "Python command-line project used to practice object-oriented modeling, data structures, and testable backend logic.",
+      "Python CLI project focused on object-oriented modeling, data structures, and testable backend logic without a browser UI.",
     role: "Backend-focused developer",
     stack: ["Python", "OOP", "pytest", "CLI", "data structures"],
     problem:
-      "Model project-management behavior in Python while keeping business rules testable from the command line.",
+      "Model project-management behavior in Python while keeping business rules separate from command-line interaction.",
     architecture: [
       "Object-oriented modules separate domain logic from command-line interaction.",
       "pytest coverage validates important behavior without relying on manual CLI checks.",
@@ -104,42 +94,6 @@ export const projects: Project[] = [
     ],
     repoUrl: "https://github.com/Chariey-01/Python-Project-Management-CLI",
   },
-  {
-    title: "Delivaroo / Send It",
-    status: "needs-details",
-    summary:
-      "[ADD DETAILS] Flagship delivery/logistics project requested for the portfolio, but details were not present in this repository.",
-    role: "[ADD ROLE]",
-    stack: ["[ADD STACK]"],
-    problem: "[ADD PROBLEM SOLVED]",
-    architecture: ["[ADD ARCHITECTURE NOTES]"],
-    highlights: ["[ADD IMPORTANT FEATURES]"],
-    technicalChallenges: ["[ADD TECHNICAL CHALLENGES]"],
-  },
-  {
-    title: "CAMPUSPULSE",
-    status: "needs-details",
-    summary:
-      "[ADD DETAILS] Flagship campus/community project requested for the portfolio, but details were not present in this repository.",
-    role: "[ADD ROLE]",
-    stack: ["[ADD STACK]"],
-    problem: "[ADD PROBLEM SOLVED]",
-    architecture: ["[ADD ARCHITECTURE NOTES]"],
-    highlights: ["[ADD IMPORTANT FEATURES]"],
-    technicalChallenges: ["[ADD TECHNICAL CHALLENGES]"],
-  },
-  {
-    title: "DevCrypt",
-    status: "needs-details",
-    summary:
-      "[ADD DETAILS] Flagship security/developer-tooling project requested for the portfolio, but details were not present in this repository.",
-    role: "[ADD ROLE]",
-    stack: ["[ADD STACK]"],
-    problem: "[ADD PROBLEM SOLVED]",
-    architecture: ["[ADD ARCHITECTURE NOTES]"],
-    highlights: ["[ADD IMPORTANT FEATURES]"],
-    technicalChallenges: ["[ADD TECHNICAL CHALLENGES]"],
-  },
 ];
 
 export const timeline: TimelineItem[] = [
@@ -148,20 +102,13 @@ export const timeline: TimelineItem[] = [
     title: "Software Engineering Training",
     organization: "Moringa School",
     description:
-      "Building full-stack foundations through React, Python, Flask, databases, testing, and team project work.",
+      "Coursework and project work in React, Python, Flask, databases, testing, and team-based development.",
   },
   {
     label: "Before Moringa",
     title: "Self-directed software learning",
     organization: "Independent study",
     description:
-      "Started with offline tutorials and practice projects, then moved toward structured engineering habits and production-minded project work.",
-  },
-  {
-    label: "Add details",
-    title: "[ADD EDUCATION OR EXPERIENCE]",
-    organization: "[ADD ORGANIZATION]",
-    description:
-      "Add verified employment, education, certifications, or community leadership here. No unsupported dates or credentials were invented.",
+      "Built early practice projects before moving into a more structured full-stack training path.",
   },
 ];

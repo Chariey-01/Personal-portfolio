@@ -1,20 +1,21 @@
 import { SectionHeading } from "../components/SectionHeading";
-import { projects } from "../data/profile";
+import { usePortfolioContent } from "../data/PortfolioContentContext";
 
 export function CaseStudies() {
+  const { projects } = usePortfolioContent();
   const caseStudies = projects.slice(0, 3);
 
   return (
     <section id="case-studies" className="section-shell bg-surface">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHeading
-          eyebrow="// engineering depth"
-          title="How the work is put together."
-          summary="Recruiters get the overview. Engineers get architecture, tradeoffs, and the shape of the implementation."
+          eyebrow="Engineering Depth"
+          title="What I want interviewers to ask about."
+          summary="A quick technical read of the strongest available projects: problem, structure, and the tradeoffs I had to manage."
         />
         <div className="grid gap-5">
           {caseStudies.map((project) => (
-            <article key={project.title} className="rounded-lg border border-white/10 bg-ink/72 p-6">
+            <article key={project.title} className="case-card rounded-lg border border-white/10 bg-ink/72 p-6">
               <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
                 <div>
                   <p className="font-mono text-sm uppercase tracking-[0.2em] text-cyan-200">

@@ -1,23 +1,34 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { profile } from "../data/profile";
+import { DocumentsDropdown } from "../components/DocumentsDropdown";
+import { ThemeToggle } from "../components/ThemeToggle";
+import { usePortfolioContent } from "../data/PortfolioContentContext";
 
 const navItems = [
   { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
-  { label: "Case Studies", href: "#case-studies" },
+  { label: "Skills", href: "#skills" },
+  { label: "Experience", href: "#experience" },
   { label: "Contact", href: "#contact" },
 ];
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
+  const { profile } = usePortfolioContent();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-ink/82 backdrop-blur-xl">
+    <header className="site-nav fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-ink/82 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
-        <a className="font-mono text-sm font-semibold text-white focus-ring" href="#home">
-          &lt;{profile.alias} /&gt;
+        <a className="focus-ring inline-flex items-center gap-3 rounded-md" href="#home" aria-label={`${profile.name} home`}>
+          <span className="grid h-9 w-9 place-items-center rounded-md border border-cyan-300/35 bg-cyan-300/10 font-mono text-sm font-semibold text-cyan-100 shadow-[0_0_28px_rgba(34,211,238,0.16)]">
+            CJ
+          </span>
+          <span className="flex flex-col leading-none">
+            <span className="text-sm font-semibold text-white">{profile.alias}</span>
+            <span className="mt-1 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-cyan-200">
+              Full stack
+            </span>
+          </span>
         </a>
 
         <div className="hidden items-center gap-6 md:flex">
@@ -26,6 +37,8 @@ export function Navigation() {
               {item.label}
             </a>
           ))}
+          <DocumentsDropdown resumeUrl={profile.resumeUrl} cvUrl={profile.cvUrl} coverLetterUrl={profile.coverLetterUrl} compact align="right" />
+          <ThemeToggle compact />
         </div>
 
         <button
@@ -52,6 +65,8 @@ export function Navigation() {
                 {item.label}
               </a>
             ))}
+            <DocumentsDropdown resumeUrl={profile.resumeUrl} cvUrl={profile.cvUrl} coverLetterUrl={profile.coverLetterUrl} />
+            <ThemeToggle />
           </div>
         </div>
       ) : null}
