@@ -14,6 +14,20 @@
     />
     <meta property="og:type" content="website" />
     <title>Charity Jepkoech | Full Stack Software Engineer</title>
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const requested = params.get("theme");
+        const stored = requested === "light" || requested === "dark" || requested === "system"
+          ? requested
+          : localStorage.getItem("portfolio-theme-preference") || "system";
+        const systemQuery = window.matchMedia?.("(prefers-color-scheme: light)");
+        const systemLight = Boolean(systemQuery && systemQuery.matches);
+        const theme = stored === "light" || stored === "dark" ? stored : systemLight ? "light" : "dark";
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
