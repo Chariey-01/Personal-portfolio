@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github, Linkedin, Loader2, Mail } from "lucide-react";
+import { Github, Linkedin, Loader2, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { SectionHeading } from "../components/SectionHeading";
 import { usePortfolioContent } from "../data/PortfolioContentContext";

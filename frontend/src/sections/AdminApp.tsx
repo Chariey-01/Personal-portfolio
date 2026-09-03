@@ -148,6 +148,7 @@ function AdminLogin({ onLogin }: { onLogin: (token: string) => void }) {
               {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
             </button>
           </span>
+          <input className="field" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </label>
         <button className="button-primary" type="submit">
           <Lock size={18} aria-hidden="true" />
