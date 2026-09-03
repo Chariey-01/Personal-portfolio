@@ -340,6 +340,15 @@ textarea {
   color: #0f172a;
 }
 
+:root[data-theme="light"] .field-label button {
+  color: #334155;
+}
+
+:root[data-theme="light"] .field-label button:hover {
+  background-color: rgba(14, 165, 233, 0.1);
+  color: #0369a1;
+}
+
 :root[data-theme="light"] .button-primary {
   background: linear-gradient(135deg, #06b6d4, #22d3ee);
   color: #082f49;
