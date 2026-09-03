@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+__pycache__/
+.pytest_cache/
+*.pyc
+backend/instance/
+instance/
+.venv/
+venv/
+vite.config.js
+vite.config.d.ts
