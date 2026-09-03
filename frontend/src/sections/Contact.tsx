@@ -1,15 +1,19 @@
 import { Github, Linkedin, Loader2, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { SectionHeading } from "../components/SectionHeading";
-import { profile } from "../data/profile";
-import { submitContact } from "../services/contact";
+import { usePortfolioContent } from "../data/PortfolioContentContext";
+import { inquiryTypes, submitContact } from "../services/contact";
 
-const initialState = { name: "", email: "", message: "" };
+const initialState = { name: "", email: "", inquiryType: "Job Opportunity", message: "" };
 
 export function Contact() {
+  const { profile } = usePortfolioContent();
   const [form, setForm] = useState(initialState);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
+  const emailHref = `mailto:${profile.email}?subject=${encodeURIComponent("Portfolio Inquiry")}`;
+  const githubLink = profile.links.find((link) => link.label.toLowerCase() === "github");
+  const linkedInLink = profile.links.find((link) => link.label.toLowerCase() === "linkedin");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,31 +46,35 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="section-shell bg-surface">
+    <section id="contact" className="contact-section section-shell">
       <div className="mx-auto grid max-w-7xl gap-8 px-5 lg:grid-cols-[0.9fr_1.1fr] md:px-8">
         <div>
           <SectionHeading
-            eyebrow="// contact"
-            title="Let’s talk about software, teams, and useful products."
-            summary="The form is wired for a Flask API endpoint. Email remains available as a reliable fallback."
+            eyebrow="Contact"
+            title="Reach me without hunting around the site."
+            summary="Use the form, email me directly, or review my GitHub and LinkedIn."
           />
           <div className="flex flex-wrap gap-3">
-            <a className="icon-link" href={`mailto:${profile.email}`}>
+            <a className="icon-link focus-ring" href={emailHref} aria-label={`Open mail app for ${profile.name}`}>
               <Mail aria-hidden="true" size={18} />
               Email
             </a>
-            <a className="icon-link" href={profile.links[0].href} target="_blank" rel="noreferrer">
-              <Github aria-hidden="true" size={18} />
-              GitHub
-            </a>
-            <a className="icon-link" href={profile.links[1].href} target="_blank" rel="noreferrer">
-              <Linkedin aria-hidden="true" size={18} />
-              LinkedIn
-            </a>
+            {githubLink ? (
+              <a className="icon-link" href={githubLink.href} target="_blank" rel="noreferrer">
+                <Github aria-hidden="true" size={18} />
+                GitHub
+              </a>
+            ) : null}
+            {linkedInLink ? (
+              <a className="icon-link" href={linkedInLink.href} target="_blank" rel="noreferrer">
+                <Linkedin aria-hidden="true" size={18} />
+                LinkedIn
+              </a>
+            ) : null}
           </div>
         </div>
 
-        <form className="rounded-lg border border-white/10 bg-ink/72 p-6" onSubmit={handleSubmit}>
+        <form className="contact-form rounded-lg border p-6 shadow-soft" onSubmit={handleSubmit}>
           <div className="grid gap-4">
             <label className="field-label">
               Name
@@ -88,6 +96,18 @@ export function Contact() {
               />
             </label>
             <label className="field-label">
+              Inquiry type
+              <select
+                className="field"
+                value={form.inquiryType}
+                onChange={(event) => setForm({ ...form, inquiryType: event.target.value })}
+              >
+                {inquiryTypes.map((type) => (
+                  <option key={type}>{type}</option>
+                ))}
+              </select>
+            </label>
+            <label className="field-label">
               Message
               <textarea
                 className="field min-h-36 resize-y"
@@ -101,6 +121,8 @@ export function Contact() {
           {status === "success" ? (
             <p className="mt-4 text-sm text-cyan-200">Message received. Thank you.</p>
           ) : null}
+
+          <div className="mt-4 hidden" data-google-identity-hook="contact-profile-prefill" />
 
           <button className="button-primary mt-6 w-full justify-center" disabled={status === "loading"}>
             {status === "loading" ? <Loader2 className="animate-spin" aria-hidden="true" size={18} /> : null}
