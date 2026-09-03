@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050810"/>
+      <stop offset="0.52" stop-color="#0d1320"/>
+      <stop offset="1" stop-color="#06221f"/>
+    </linearGradient>
+    <radialGradient id="cyanGlow" cx="20%" cy="18%" r="55%">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pinkGlow" cx="86%" cy="22%" r="45%">
+      <stop offset="0" stop-color="#f472b6" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#f472b6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#cyanGlow)"/>
+  <rect width="1200" height="630" fill="url(#pinkGlow)"/>
+  <path d="M0 548C168 492 322 502 486 540C654 579 806 590 1200 500V630H0Z" fill="#22d3ee" opacity="0.08"/>
+
+  <g transform="translate(72 76)">
+    <rect x="0" y="0" width="54" height="54" rx="12" fill="#22d3ee" opacity="0.13" stroke="#67e8f9" stroke-opacity="0.42"/>
+    <text x="27" y="35" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#a5f3fc">CJ</text>
+    <text x="76" y="23" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#ffffff">Chariey</text>
+    <text x="76" y="48" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="5" fill="#67e8f9">FULL STACK</text>
+  </g>
+
+  <g transform="translate(72 190)">
+    <text x="0" y="0" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800" fill="#ffffff">Charity Jepkoech</text>
+    <text x="0" y="68" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="700" fill="#67e8f9">Full-Stack Software Engineer</text>
+    <text x="0" y="130" font-family="Inter, Arial, sans-serif" font-size="26" fill="#cbd5e1">React UIs, Flask APIs, and PostgreSQL systems.</text>
+  </g>
+
+  <g transform="translate(72 388)">
+    <rect x="0" y="0" width="120" height="48" rx="8" fill="#22d3ee" fill-opacity="0.12" stroke="#67e8f9" stroke-opacity="0.28"/>
+    <text x="60" y="31" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#cffafe">React</text>
+    <rect x="138" y="0" width="154" height="48" rx="8" fill="#22d3ee" fill-opacity="0.12" stroke="#67e8f9" stroke-opacity="0.28"/>
+    <text x="215" y="31" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#cffafe">TypeScript</text>
+    <rect x="310" y="0" width="122" height="48" rx="8" fill="#22d3ee" fill-opacity="0.12" stroke="#67e8f9" stroke-opacity="0.28"/>
+    <text x="371" y="31" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#cffafe">Flask</text>
+    <rect x="450" y="0" width="150" height="48" rx="8" fill="#22d3ee" fill-opacity="0.12" stroke="#67e8f9" stroke-opacity="0.28"/>
+    <text x="525" y="31" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#cffafe">PostgreSQL</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="738" y="124" width="344" height="368" rx="24" fill="#22d3ee" opacity="0.14"/>
+    <image href="images/profile/charity-jepkoech.png" x="752" y="138" width="316" height="340" preserveAspectRatio="xMidYMid slice"/>
+    <rect x="752" y="138" width="316" height="340" rx="18" fill="none" stroke="#67e8f9" stroke-opacity="0.55" stroke-width="2"/>
+  </g>
+
+  <text x="72" y="562" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#082f49">personal-portfolio-tefg.vercel.app</text>
+</svg>

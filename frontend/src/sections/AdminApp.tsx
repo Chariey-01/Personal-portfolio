@@ -1,5 +1,5 @@
 import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
-import { Archive, ExternalLink, FileText, Image, Lock, LogOut, Plus, Save, Trash2, Upload } from "lucide-react";
+import { Archive, Eye, EyeOff, ExternalLink, FileText, Image, Lock, LogOut, Plus, Save, Trash2, Upload } from "lucide-react";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { adminRequest, getAdminContactMessages, getAdminDocuments, loginAdmin } from "../services/portfolio";
 import type { ContactMessage, DocumentType, PortfolioDocument, Profile, Project, Testimonial } from "../types/portfolio";
@@ -102,6 +102,7 @@ export function AdminApp() {
 function AdminLogin({ onLogin }: { onLogin: (token: string) => void }) {
   const [username, setUsername] = useState("admin");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   async function submit(event: FormEvent) {
@@ -129,6 +130,24 @@ function AdminLogin({ onLogin }: { onLogin: (token: string) => void }) {
         </label>
         <label className="field-label">
           Password
+          <span className="relative">
+            <input
+              className="field pr-12"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
+            />
+            <button
+              className="absolute right-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded text-slate-300 transition hover:bg-white/10 hover:text-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-200"
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              onClick={() => setShowPassword((value) => !value)}
+            >
+              {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+            </button>
+          </span>
           <input className="field" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </label>
         <button className="button-primary" type="submit">
