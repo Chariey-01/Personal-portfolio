@@ -85,7 +85,18 @@ function mockApi(contactResponse = new Response(JSON.stringify({ message: "Messa
 describe("portfolio app", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    localStorage.clear();
+    window.history.pushState({}, "", "/");
     mockApi();
+  });
+
+  it("renders one password field for the Chariey admin login", () => {
+    window.history.pushState({}, "", "/admin");
+
+    render(<App />);
+
+    expect(screen.getByRole("heading", { name: /admin login/i })).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/^password$/i)).toHaveLength(1);
   });
 
   it("renders the primary application shell and one logical h1", async () => {
