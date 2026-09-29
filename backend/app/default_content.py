@@ -40,6 +40,13 @@ DEFAULT_PROJECTS = [
         "github_url": "https://github.com/Chariey-01/REACT-PERSONAL-PROJECTS-SHOWCASE-APP",
         "live_url": "https://react-personal-projects-showcase-ap.vercel.app/",
         "problem": "Build a product-shopping flow that keeps catalog browsing, cart behavior, and management screens understandable across routes.",
+        "solution": "A routed single-page application with reusable commerce components and a REST-shaped development data layer.",
+        "technical_decisions": ["Use route boundaries for major shopping tasks", "Keep shared product UI reusable across team-owned screens"],
+        "lessons": ["Shared conventions matter as much as component quality in a team codebase."],
+        "result": "A deployed shopping experience that demonstrates routed frontend architecture and stateful interactions.",
+        "year": 2026,
+        "accent_from": "#0e7490",
+        "accent_to": "#be185d",
         "architecture": [
             "React Router separates landing, catalog, product, cart, and management views.",
             "JSON Server gives the frontend a REST-shaped data layer for CRUD practice.",
@@ -68,6 +75,13 @@ DEFAULT_PROJECTS = [
         "github_url": "https://github.com/Chariey-01/PROGRESS-TRACKING-APP",
         "live_url": "https://progress-tracking-app.vercel.app/",
         "problem": "Turn a long learning plan into daily progress a learner can actually see and update.",
+        "solution": "A focused progress dashboard with roadmap, streak, achievement, and persistence features.",
+        "technical_decisions": ["Use local persistence to keep the first version deployable without a backend", "Separate progress views into focused components"],
+        "lessons": ["Motivational UI works best when progress remains easy to understand."],
+        "result": "A deployed personal learning tool that makes daily progress visible.",
+        "year": 2026,
+        "accent_from": "#047857",
+        "accent_to": "#0369a1",
         "architecture": [
             "Componentized React interface separates roadmap, progress, streak, and badge views.",
             "Stateful interactions keep learning progress visible without leaving the page.",
@@ -91,6 +105,13 @@ DEFAULT_PROJECTS = [
         "technologies": ["Python", "OOP", "pytest", "CLI", "data structures"],
         "github_url": "https://github.com/Chariey-01/Python-Project-Management-CLI",
         "problem": "Model project-management behavior in Python while keeping business rules separate from command-line interaction.",
+        "solution": "Object-oriented domain modules with a thin command-line interaction layer and behavior-focused tests.",
+        "technical_decisions": ["Keep domain rules independent from input/output", "Use pytest for repeatable behavior checks"],
+        "lessons": ["Separating domain logic from interaction code makes both easier to test and change."],
+        "result": "A backend-first project demonstrating Python modeling and testable business logic.",
+        "year": 2026,
+        "accent_from": "#7c3aed",
+        "accent_to": "#c2410c",
         "architecture": [
             "Object-oriented modules separate domain logic from command-line interaction.",
             "pytest coverage validates important behavior without relying on manual CLI checks.",
@@ -102,4 +123,52 @@ DEFAULT_PROJECTS = [
             "Keeping command interaction separate from core rules",
         ],
     },
+]
+
+DEFAULT_SKILLS = [
+    {"category": "Languages", "name": "Python", "detail": "Backend services, domain logic, and testing", "familiarity": "Comfortable", "display_order": 1},
+    {"category": "Languages", "name": "TypeScript", "detail": "Typed React components and API contracts", "familiarity": "Growing", "display_order": 2},
+    {"category": "Frontend", "name": "React", "detail": "Component architecture, routing, forms, and state", "familiarity": "Comfortable", "display_order": 3},
+    {"category": "Frontend", "name": "Tailwind CSS", "detail": "Responsive interfaces and design systems", "familiarity": "Worked with", "display_order": 4},
+    {"category": "Backend", "name": "Flask", "detail": "REST APIs, authentication, and service boundaries", "familiarity": "Comfortable", "display_order": 5},
+    {"category": "Backend", "name": "Django", "detail": "Currently extending backend framework experience", "familiarity": "Currently learning", "display_order": 6},
+    {"category": "Data & Testing", "name": "PostgreSQL", "detail": "Relational data modeling and migrations", "familiarity": "Worked with", "display_order": 7},
+    {"category": "Data & Testing", "name": "pytest", "detail": "API and domain behavior tests", "familiarity": "Worked with", "display_order": 8},
+]
+
+DEFAULT_EXPERIENCE = [
+    {
+        "label": "Current",
+        "title": "Software Engineering Training",
+        "organization": "Moringa School",
+        "description": "Coursework and project work in React, Python, Flask, databases, testing, and team-based development.",
+        "display_order": 1,
+    },
+    {
+        "label": "Before Moringa",
+        "title": "Self-directed software learning",
+        "organization": "Independent study",
+        "description": "Built early practice projects before moving into a more structured full-stack training path.",
+        "display_order": 2,
+    },
+]
+
+DEFAULT_EDUCATION = [
+    {
+        "institution": "Moringa School",
+        "program": "Software Engineering Training",
+        "description": "Practical full-stack software engineering training.",
+        "display_order": 1,
+    },
+    {
+        "institution": "Egerton University",
+        "program": "Computer Science studies",
+        "description": "Early computer science foundations; the degree path was not completed.",
+        "display_order": 2,
+    },
+]
+
+DEFAULT_SOCIAL_LINKS = [
+    {"label": "GitHub", "url": "https://github.com/Chariey-01", "display_order": 1},
+    {"label": "LinkedIn", "url": "https://www.linkedin.com/in/charity-jepkoech-91b5b6330", "display_order": 2},
 ]

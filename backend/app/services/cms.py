@@ -2,9 +2,29 @@ from __future__ import annotations
 
 import re
 
-from ..default_content import DEFAULT_PROFILE, DEFAULT_PROJECTS
+from ..default_content import (
+    DEFAULT_EDUCATION,
+    DEFAULT_EXPERIENCE,
+    DEFAULT_PROFILE,
+    DEFAULT_PROJECTS,
+    DEFAULT_SKILLS,
+    DEFAULT_SOCIAL_LINKS,
+)
 from ..extensions import db
-from ..models import ContactMessage, CoverLetter, Document, Profile, Project, Resume, Testimonial
+from ..models import (
+    ContactMessage,
+    CoverLetter,
+    Document,
+    Education,
+    Experience,
+    Profile,
+    Project,
+    ProjectImage,
+    Resume,
+    Skill,
+    SocialLink,
+    Testimonial,
+)
 
 
 def slugify(value: str) -> str:
@@ -23,6 +43,17 @@ def ensure_default_content() -> None:
         for project in DEFAULT_PROJECTS:
             db.session.add(Project(**project))
         changed = True
+
+    for model, rows in [
+        (Skill, DEFAULT_SKILLS),
+        (Experience, DEFAULT_EXPERIENCE),
+        (Education, DEFAULT_EDUCATION),
+        (SocialLink, DEFAULT_SOCIAL_LINKS),
+    ]:
+        if model.query.first() is None:
+            for row in rows:
+                db.session.add(model(**row))
+            changed = True
 
     if changed:
         db.session.commit()
@@ -66,6 +97,7 @@ def serialize_project(project: Project) -> dict:
         "slug": project.slug,
         "shortDescription": project.short_description,
         "summary": project.short_description,
+        "longDescription": project.long_description,
         "caseStudy": project.case_study,
         "role": project.role,
         "technologies": project.technologies or [],
@@ -78,9 +110,18 @@ def serialize_project(project: Project) -> dict:
         "status": project.status,
         "displayOrder": project.display_order,
         "problem": project.problem,
+        "solution": project.solution,
         "architecture": project.architecture or [],
+        "technicalDecisions": project.technical_decisions or [],
         "highlights": project.highlights or [],
         "technicalChallenges": project.technical_challenges or [],
+        "lessons": project.lessons or [],
+        "result": project.result,
+        "year": project.year,
+        "published": project.published,
+        "accentFrom": project.accent_from,
+        "accentTo": project.accent_to,
+        "images": [serialize_project_image(image) for image in project.images],
         "archived": project.archived,
         "createdAt": project.created_at.isoformat() if project.created_at else None,
         "updatedAt": project.updated_at.isoformat() if project.updated_at else None,
@@ -148,6 +189,7 @@ def serialize_contact_message(message: ContactMessage) -> dict:
         "message": message.message,
         "createdAt": message.created_at.isoformat() if message.created_at else None,
         "archived": message.archived,
+        "handled": message.handled,
     }
 
 
@@ -163,4 +205,63 @@ def serialize_testimonial(testimonial: Testimonial) -> dict:
         "approved": testimonial.approved,
         "displayOrder": testimonial.display_order,
         "archived": testimonial.archived,
+    }
+
+
+def serialize_project_image(image: ProjectImage) -> dict:
+    return {
+        "id": image.id,
+        "imageUrl": image.image_url,
+        "altText": image.alt_text,
+        "caption": image.caption,
+        "displayOrder": image.display_order,
+    }
+
+
+def serialize_skill(skill: Skill) -> dict:
+    return {
+        "id": skill.id,
+        "category": skill.category,
+        "name": skill.name,
+        "detail": skill.detail,
+        "familiarity": skill.familiarity,
+        "displayOrder": skill.display_order,
+        "archived": skill.archived,
+    }
+
+
+def serialize_experience(item: Experience) -> dict:
+    return {
+        "id": item.id,
+        "label": item.label,
+        "title": item.title,
+        "organization": item.organization,
+        "description": item.description,
+        "startDate": item.start_date,
+        "endDate": item.end_date,
+        "displayOrder": item.display_order,
+        "archived": item.archived,
+    }
+
+
+def serialize_education(item: Education) -> dict:
+    return {
+        "id": item.id,
+        "institution": item.institution,
+        "program": item.program,
+        "description": item.description,
+        "startDate": item.start_date,
+        "endDate": item.end_date,
+        "displayOrder": item.display_order,
+        "archived": item.archived,
+    }
+
+
+def serialize_social_link(link: SocialLink) -> dict:
+    return {
+        "id": link.id,
+        "label": link.label,
+        "url": link.url,
+        "displayOrder": link.display_order,
+        "archived": link.archived,
     }

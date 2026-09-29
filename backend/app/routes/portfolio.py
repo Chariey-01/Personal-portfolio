@@ -3,17 +3,35 @@ from pathlib import Path
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 
 from ..extensions import db
-from ..models import ContactMessage, CoverLetter, Document, Profile, Project, Resume, Testimonial
+from ..models import (
+    ContactMessage,
+    CoverLetter,
+    Document,
+    Education,
+    Experience,
+    Profile,
+    Project,
+    ProjectImage,
+    Resume,
+    Skill,
+    SocialLink,
+    Testimonial,
+)
 from ..services.auth import create_admin_token, require_admin, verify_admin_credentials
 from ..services.cms import (
     current_document,
     ensure_default_content,
     serialize_contact_message,
     serialize_document,
+    serialize_education,
+    serialize_experience,
     serialize_profile,
     serialize_project,
+    serialize_project_image,
     serialize_cover_letter,
     serialize_resume,
+    serialize_skill,
+    serialize_social_link,
     serialize_testimonial,
     slugify,
 )
@@ -35,7 +53,7 @@ def profile():
 def projects():
     ensure_default_content()
     rows = (
-        Project.query.filter_by(archived=False)
+        Project.query.filter_by(archived=False, published=True)
         .order_by(Project.featured.desc(), Project.display_order.asc(), Project.updated_at.desc())
         .all()
     )
@@ -45,7 +63,7 @@ def projects():
 @portfolio_bp.get("/projects/<slug>")
 def project_detail(slug):
     ensure_default_content()
-    project = Project.query.filter_by(slug=slug, archived=False).first_or_404()
+    project = Project.query.filter_by(slug=slug, archived=False, published=True).first_or_404()
     return jsonify(serialize_project(project))
 
 
@@ -57,6 +75,34 @@ def testimonials():
         .all()
     )
     return jsonify([serialize_testimonial(testimonial) for testimonial in rows])
+
+
+@portfolio_bp.get("/skills")
+def skills():
+    ensure_default_content()
+    rows = Skill.query.filter_by(archived=False).order_by(Skill.display_order.asc(), Skill.name.asc()).all()
+    return jsonify([serialize_skill(item) for item in rows])
+
+
+@portfolio_bp.get("/experience")
+def experience():
+    ensure_default_content()
+    rows = Experience.query.filter_by(archived=False).order_by(Experience.display_order.asc()).all()
+    return jsonify([serialize_experience(item) for item in rows])
+
+
+@portfolio_bp.get("/education")
+def education():
+    ensure_default_content()
+    rows = Education.query.filter_by(archived=False).order_by(Education.display_order.asc()).all()
+    return jsonify([serialize_education(item) for item in rows])
+
+
+@portfolio_bp.get("/social-links")
+def social_links():
+    ensure_default_content()
+    rows = SocialLink.query.filter_by(archived=False).order_by(SocialLink.display_order.asc()).all()
+    return jsonify([serialize_social_link(item) for item in rows])
 
 
 @portfolio_bp.get("/resume")
@@ -225,9 +271,49 @@ def upload_project_image(project_id):
         saved = save_image(request.files.get("image"), "projects")
     except UploadValidationError as exc:
         return jsonify({"error": str(exc)}), 400
-    project.image_url = saved["storage_url"]
+    alt_text = str(request.form.get("altText", "")).strip() or f"{project.title} application screenshot"
+    image = ProjectImage(
+        project=project,
+        image_url=saved["storage_url"],
+        alt_text=alt_text,
+        caption=str(request.form.get("caption", "")).strip() or None,
+        display_order=int(request.form.get("displayOrder", len(project.images))),
+    )
+    if not project.image_url:
+        project.image_url = saved["storage_url"]
+    db.session.add(image)
     db.session.commit()
     return jsonify(serialize_project(project))
+
+
+@portfolio_bp.patch("/admin/project-images/<int:image_id>")
+@require_admin
+def update_project_image(image_id):
+    image = ProjectImage.query.get_or_404(image_id)
+    payload = request.get_json(silent=True) or {}
+    if "altText" in payload:
+        image.alt_text = str(payload["altText"]).strip() or image.alt_text
+    if "caption" in payload:
+        image.caption = str(payload["caption"]).strip() or None
+    if "displayOrder" in payload:
+        image.display_order = int(payload["displayOrder"] or 0)
+    db.session.commit()
+    return jsonify(serialize_project_image(image))
+
+
+@portfolio_bp.delete("/admin/project-images/<int:image_id>")
+@require_admin
+def delete_project_image(image_id):
+    image = ProjectImage.query.get_or_404(image_id)
+    project = image.project
+    was_cover = project.image_url == image.image_url
+    db.session.delete(image)
+    db.session.flush()
+    if was_cover:
+        next_image = ProjectImage.query.filter_by(project_id=project.id).order_by(ProjectImage.display_order.asc()).first()
+        project.image_url = next_image.image_url if next_image else None
+    db.session.commit()
+    return "", 204
 
 
 @portfolio_bp.get("/admin/documents")
@@ -368,6 +454,17 @@ def archive_contact_message(message_id):
     return jsonify(serialize_contact_message(message))
 
 
+@portfolio_bp.patch("/admin/contact-messages/<int:message_id>")
+@require_admin
+def update_contact_message(message_id):
+    message = ContactMessage.query.get_or_404(message_id)
+    payload = request.get_json(silent=True) or {}
+    if "handled" in payload:
+        message.handled = bool(payload["handled"])
+    db.session.commit()
+    return jsonify(serialize_contact_message(message))
+
+
 @portfolio_bp.get("/admin/testimonials")
 @require_admin
 def admin_testimonials():
@@ -410,17 +507,119 @@ def archive_testimonial(testimonial_id):
     return jsonify(serialize_testimonial(testimonial))
 
 
+@portfolio_bp.post("/admin/testimonials/<int:testimonial_id>/image")
+@require_admin
+def upload_testimonial_image(testimonial_id):
+    testimonial = Testimonial.query.get_or_404(testimonial_id)
+    try:
+        saved = save_image(request.files.get("image"), "testimonials")
+    except UploadValidationError as exc:
+        return jsonify({"error": str(exc)}), 400
+    testimonial.image_url = saved["storage_url"]
+    db.session.commit()
+    return jsonify(serialize_testimonial(testimonial))
+
+
+def _collection_routes(path: str, model, serializer, required_fields: dict, field_map: dict):
+    endpoint_prefix = model.__name__.lower()
+
+    def list_items():
+        ensure_default_content()
+        rows = model.query.order_by(model.display_order.asc()).all()
+        return jsonify([serializer(item) for item in rows])
+
+    def create_item():
+        payload = request.get_json(silent=True) or {}
+        values = {}
+        for external, internal in required_fields.items():
+            value = str(payload.get(external, "")).strip()
+            if not value:
+                return jsonify({"error": f"{external} is required."}), 400
+            values[internal] = value
+        item = model(**values)
+        _apply_content_payload(item, payload, field_map)
+        db.session.add(item)
+        db.session.commit()
+        return jsonify(serializer(item)), 201
+
+    def update_item(item_id):
+        item = db.session.get(model, item_id)
+        if item is None:
+            return jsonify({"error": "Content item not found."}), 404
+        _apply_content_payload(item, request.get_json(silent=True) or {}, field_map)
+        db.session.commit()
+        return jsonify(serializer(item))
+
+    def archive_item(item_id):
+        item = db.session.get(model, item_id)
+        if item is None:
+            return jsonify({"error": "Content item not found."}), 404
+        item.archived = True
+        db.session.commit()
+        return jsonify(serializer(item))
+
+    portfolio_bp.add_url_rule(path, f"admin_{endpoint_prefix}_list", require_admin(list_items), methods=["GET"])
+    portfolio_bp.add_url_rule(path, f"admin_{endpoint_prefix}_create", require_admin(create_item), methods=["POST"])
+    portfolio_bp.add_url_rule(f"{path}/<int:item_id>", f"admin_{endpoint_prefix}_update", require_admin(update_item), methods=["PATCH"])
+    portfolio_bp.add_url_rule(f"{path}/<int:item_id>", f"admin_{endpoint_prefix}_archive", require_admin(archive_item), methods=["DELETE"])
+
+
+def _apply_content_payload(item, payload: dict, field_map: dict) -> None:
+    for external, internal in field_map.items():
+        if external in payload:
+            setattr(item, internal, payload[external])
+    if "displayOrder" in payload:
+        item.display_order = int(payload["displayOrder"] or 0)
+    if "archived" in payload:
+        item.archived = bool(payload["archived"])
+
+
+_collection_routes(
+    "/admin/skills",
+    Skill,
+    serialize_skill,
+    {"category": "category", "name": "name", "detail": "detail"},
+    {"category": "category", "name": "name", "detail": "detail", "familiarity": "familiarity"},
+)
+_collection_routes(
+    "/admin/experience",
+    Experience,
+    serialize_experience,
+    {"label": "label", "title": "title", "organization": "organization", "description": "description"},
+    {"label": "label", "title": "title", "organization": "organization", "description": "description", "startDate": "start_date", "endDate": "end_date"},
+)
+_collection_routes(
+    "/admin/education",
+    Education,
+    serialize_education,
+    {"institution": "institution", "program": "program"},
+    {"institution": "institution", "program": "program", "description": "description", "startDate": "start_date", "endDate": "end_date"},
+)
+_collection_routes(
+    "/admin/social-links",
+    SocialLink,
+    serialize_social_link,
+    {"label": "label", "url": "url"},
+    {"label": "label", "url": "url"},
+)
+
+
 def _apply_project_payload(project: Project, payload: dict) -> None:
     field_map = {
         "title": "title",
         "slug": "slug",
         "shortDescription": "short_description",
+        "longDescription": "long_description",
         "caseStudy": "case_study",
         "role": "role",
         "githubUrl": "github_url",
         "liveUrl": "live_url",
         "imageUrl": "image_url",
         "problem": "problem",
+        "solution": "solution",
+        "result": "result",
+        "accentFrom": "accent_from",
+        "accentTo": "accent_to",
     }
     for external, internal in field_map.items():
         if external in payload:
@@ -434,8 +633,10 @@ def _apply_project_payload(project: Project, payload: dict) -> None:
     for external, internal in {
         "technologies": "technologies",
         "architecture": "architecture",
+        "technicalDecisions": "technical_decisions",
         "highlights": "highlights",
         "technicalChallenges": "technical_challenges",
+        "lessons": "lessons",
     }.items():
         if external in payload and isinstance(payload[external], list):
             setattr(project, internal, payload[external])
@@ -445,6 +646,10 @@ def _apply_project_payload(project: Project, payload: dict) -> None:
         project.archived = bool(payload["archived"])
     if "displayOrder" in payload:
         project.display_order = int(payload["displayOrder"] or 0)
+    if "published" in payload:
+        project.published = bool(payload["published"])
+    if "year" in payload:
+        project.year = int(payload["year"]) if payload["year"] else None
 
 
 def _default_document_title(document_type: str) -> str:
