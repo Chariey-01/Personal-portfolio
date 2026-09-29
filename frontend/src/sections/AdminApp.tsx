@@ -2,7 +2,7 @@ import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
 import { Archive, Eye, EyeOff, ExternalLink, FileText, Image, Lock, LogOut, Plus, Save, Trash2, Upload } from "lucide-react";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { adminRequest, getAdminContactMessages, getAdminDocuments, loginAdmin } from "../services/portfolio";
-import type { ContactMessage, DocumentType, PortfolioDocument, Profile, Project, Testimonial } from "../types/portfolio";
+import type { ContactMessage, DocumentType, EducationItem, ExperienceItem, PortfolioDocument, Profile, Project, Skill, SocialLink, Testimonial } from "../types/portfolio";
 
 const emptyProject: Project = {
   title: "",
@@ -26,7 +26,12 @@ const roleOptions = [
   "Frontend engineer on a team project",
 ];
 
-export function AdminApp() {
+type AdminAppProps = {
+  onAuthenticated?: () => void;
+  onSignOut?: () => void;
+};
+
+export function AdminApp({ onAuthenticated, onSignOut }: AdminAppProps) {
   const [token, setToken] = useState(() => localStorage.getItem("portfolioAdminToken") ?? "");
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -34,20 +39,32 @@ export function AdminApp() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [documents, setDocuments] = useState<PortfolioDocument[]>([]);
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [experience, setExperience] = useState<ExperienceItem[]>([]);
+  const [education, setEducation] = useState<EducationItem[]>([]);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
   async function loadAdminData(activeToken = token) {
-    const [profileData, projectData, testimonialData, documentData, contactMessageData] = await Promise.all([
+    const [profileData, projectData, testimonialData, documentData, contactMessageData, skillData, experienceData, educationData, socialLinkData] = await Promise.all([
       adminRequest<Profile>("/api/admin/profile", activeToken),
       adminRequest<Project[]>("/api/admin/projects", activeToken),
       adminRequest<Testimonial[]>("/api/admin/testimonials", activeToken),
       getAdminDocuments(activeToken),
       getAdminContactMessages(activeToken),
+      adminRequest<Skill[]>("/api/admin/skills", activeToken),
+      adminRequest<ExperienceItem[]>("/api/admin/experience", activeToken),
+      adminRequest<EducationItem[]>("/api/admin/education", activeToken),
+      adminRequest<SocialLink[]>("/api/admin/social-links", activeToken),
     ]);
     setProfile(profileData);
     setProjects(projectData);
     setTestimonials(testimonialData);
     setDocuments(documentData);
     setContactMessages(contactMessageData);
+    setSkills(skillData);
+    setExperience(experienceData);
+    setEducation(educationData);
+    setSocialLinks(socialLinkData);
   }
 
   useEffect(() => {
@@ -58,6 +75,7 @@ export function AdminApp() {
   function saveToken(nextToken: string) {
     localStorage.setItem("portfolioAdminToken", nextToken);
     setToken(nextToken);
+    onAuthenticated?.();
   }
 
   if (!token) {
@@ -68,7 +86,7 @@ export function AdminApp() {
     <div className="min-h-screen bg-ink px-5 py-8 text-slate-100 md:px-8">
       <header className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div>
-          <p className="font-mono text-sm uppercase tracking-[0.18em] text-cyan-200">Portfolio CMS</p>
+          <p className="font-mono text-sm uppercase tracking-[0.18em] text-violet-300">Portfolio CMS</p>
           <h1 className="mt-2 text-3xl font-semibold text-white">Admin Dashboard</h1>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -79,6 +97,7 @@ export function AdminApp() {
             onClick={() => {
               localStorage.removeItem("portfolioAdminToken");
               setToken("");
+              onSignOut?.();
             }}
           >
             <LogOut size={18} aria-hidden="true" />
@@ -88,10 +107,14 @@ export function AdminApp() {
       </header>
 
       <main className="mx-auto mt-8 grid max-w-7xl gap-6">
-        {message ? <p className="rounded-md border border-cyan-300/30 bg-cyan-300/10 p-4 text-sm">{message}</p> : null}
+        {message ? <p className="rounded-md border border-violet-300/30 bg-violet-300/10 p-4 text-sm">{message}</p> : null}
         {profile ? <ProfilePanel token={token} profile={profile} onSaved={setProfile} setMessage={setMessage} /> : null}
         <DocumentsPanel token={token} documents={documents} setDocuments={setDocuments} setMessage={setMessage} />
         <ProjectsPanel token={token} projects={projects} setProjects={setProjects} setMessage={setMessage} />
+        <ManagedCollectionPanel title="Skills" endpoint="/api/admin/skills" token={token} items={skills} setItems={setSkills} setMessage={setMessage} fields={[{ key: "category", label: "Category" }, { key: "name", label: "Skill" }, { key: "detail", label: "Description" }, { key: "familiarity", label: "Familiarity" }, { key: "displayOrder", label: "Display order", type: "number" }]} />
+        <ManagedCollectionPanel title="Experience" endpoint="/api/admin/experience" token={token} items={experience} setItems={setExperience} setMessage={setMessage} fields={[{ key: "label", label: "Label" }, { key: "title", label: "Title" }, { key: "organization", label: "Organization" }, { key: "description", label: "Description", type: "textarea" }, { key: "startDate", label: "Start date" }, { key: "endDate", label: "End date" }, { key: "displayOrder", label: "Display order", type: "number" }]} />
+        <ManagedCollectionPanel title="Education" endpoint="/api/admin/education" token={token} items={education} setItems={setEducation} setMessage={setMessage} fields={[{ key: "institution", label: "Institution" }, { key: "program", label: "Program" }, { key: "description", label: "Description", type: "textarea" }, { key: "startDate", label: "Start date" }, { key: "endDate", label: "End date" }, { key: "displayOrder", label: "Display order", type: "number" }]} />
+        <ManagedCollectionPanel title="Social links" endpoint="/api/admin/social-links" token={token} items={socialLinks} setItems={setSocialLinks} setMessage={setMessage} fields={[{ key: "label", label: "Label" }, { key: "url", label: "URL" }, { key: "displayOrder", label: "Display order", type: "number" }]} />
         <TestimonialsPanel token={token} testimonials={testimonials} setTestimonials={setTestimonials} setMessage={setMessage} />
         <ContactMessagesPanel token={token} messages={contactMessages} setMessages={setContactMessages} setMessage={setMessage} />
       </main>
@@ -120,7 +143,7 @@ function AdminLogin({ onLogin }: { onLogin: (token: string) => void }) {
     <main className="grid min-h-screen place-items-center bg-ink px-5 text-slate-100">
       <form className="grid w-full max-w-md gap-5 rounded-lg border border-white/10 bg-white/[0.045] p-6 shadow-soft" onSubmit={submit}>
         <div>
-          <Lock className="text-cyan-200" aria-hidden="true" />
+          <Lock className="text-violet-300" aria-hidden="true" />
           <h1 className="mt-3 text-2xl font-semibold text-white">Admin Login</h1>
         </div>
         {error ? <p className="rounded-md border border-red-300/30 bg-red-300/10 p-3 text-sm text-red-100">{error}</p> : null}
@@ -139,7 +162,7 @@ function AdminLogin({ onLogin }: { onLogin: (token: string) => void }) {
               autoComplete="current-password"
             />
             <button
-              className="absolute right-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded text-slate-300 transition hover:bg-white/10 hover:text-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-200"
+              className="absolute right-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded text-slate-300 transition hover:bg-white/10 hover:text-fuchsia-200 focus:outline-none focus:ring-2 focus:ring-fuchsia-300"
               type="button"
               aria-label={showPassword ? "Hide password" : "Show password"}
               aria-pressed={showPassword}
@@ -385,6 +408,7 @@ function ProjectsPanel({
   setMessage: (message: string) => void;
 }) {
   const [draft, setDraft] = useState<Project>(emptyProject);
+  const [imageAlt, setImageAlt] = useState("");
 
   async function saveProject(event: FormEvent) {
     event.preventDefault();
@@ -409,6 +433,7 @@ function ProjectsPanel({
     if (!file || !draft.id) return;
     const formData = new FormData();
     formData.append("image", file);
+    formData.append("altText", imageAlt || `${draft.title} application screenshot`);
     const saved = await adminRequest<Project>(`/api/admin/projects/${draft.id}/image`, token, {
       method: "POST",
       body: formData,
@@ -442,6 +467,9 @@ function ProjectsPanel({
           <AdminField label="Live URL" value={draft.liveUrl ?? ""} onChange={(value) => setDraft({ ...draft, liveUrl: value })} />
           <AdminField label="Image URL" value={draft.imageUrl ?? ""} onChange={(value) => setDraft({ ...draft, imageUrl: value })} />
           <AdminField label="Display order" value={String(draft.displayOrder ?? 0)} onChange={(value) => setDraft({ ...draft, displayOrder: Number(value) })} />
+          <AdminField label="Project year" value={String(draft.year ?? "")} onChange={(value) => setDraft({ ...draft, year: value ? Number(value) : null })} />
+          <AdminField label="Gradient start" value={draft.accentFrom ?? ""} onChange={(value) => setDraft({ ...draft, accentFrom: value })} />
+          <AdminField label="Gradient end" value={draft.accentTo ?? ""} onChange={(value) => setDraft({ ...draft, accentTo: value })} />
           <label className="field-label">
             Status
             <select className="field" value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value as Project["status"] })}>
@@ -453,21 +481,27 @@ function ProjectsPanel({
           </label>
         </div>
         <AdminTextarea label="Short description" value={draft.summary} onChange={(value) => setDraft({ ...draft, summary: value })} />
+        <AdminTextarea label="Long description" value={draft.longDescription ?? ""} onChange={(value) => setDraft({ ...draft, longDescription: value })} />
         <AdminTextarea label="Case-study description" value={draft.caseStudy ?? ""} onChange={(value) => setDraft({ ...draft, caseStudy: value })} />
         <AdminField label="Stack / technologies, comma separated" value={draft.stack.join(", ")} onChange={(value) => setDraft({ ...draft, stack: splitList(value), technologies: splitList(value) })} />
         <AdminTextarea label="Problem solved" value={draft.problem} onChange={(value) => setDraft({ ...draft, problem: value })} rows={3} />
+        <AdminTextarea label="What I built / solution" value={draft.solution ?? ""} onChange={(value) => setDraft({ ...draft, solution: value })} rows={3} />
         <AdminTextarea label="Architecture / how it is built, one item per line" value={draft.architecture.join("\n")} onChange={(value) => setDraft({ ...draft, architecture: splitLines(value) })} />
+        <AdminTextarea label="Technical decisions, one item per line" value={(draft.technicalDecisions ?? []).join("\n")} onChange={(value) => setDraft({ ...draft, technicalDecisions: splitLines(value) })} />
         <AdminTextarea label="What I learned / highlights, one item per line" value={draft.highlights.join("\n")} onChange={(value) => setDraft({ ...draft, highlights: splitLines(value) })} />
         <AdminTextarea label="Technical challenges, one item per line" value={draft.technicalChallenges.join("\n")} onChange={(value) => setDraft({ ...draft, technicalChallenges: splitLines(value) })} />
+        <AdminTextarea label="What I would do differently / lessons, one item per line" value={(draft.lessons ?? []).join("\n")} onChange={(value) => setDraft({ ...draft, lessons: splitLines(value) })} />
+        <AdminTextarea label="Result" value={draft.result ?? ""} onChange={(value) => setDraft({ ...draft, result: value })} rows={3} />
         <label className="flex items-center gap-3 text-sm text-slate-200">
           <input type="checkbox" checked={Boolean(draft.featured)} onChange={(event) => setDraft({ ...draft, featured: event.target.checked })} />
           Featured project
         </label>
+        <label className="flex items-center gap-3 text-sm text-slate-200">
+          <input type="checkbox" checked={draft.published !== false} onChange={(event) => setDraft({ ...draft, published: event.target.checked })} />
+          Publish on public portfolio
+        </label>
         {draft.id ? (
-          <label className="field-label">
-            Project image
-            <input className="field" type="file" accept="image/*" onChange={uploadProjectImage} />
-          </label>
+          <div className="grid gap-3 md:grid-cols-2"><AdminField label="Screenshot alt text" value={imageAlt} onChange={setImageAlt} /><label className="field-label">Project image<input className="field" type="file" accept="image/*" onChange={uploadProjectImage} /></label></div>
         ) : null}
         <button className="button-primary w-fit" type="submit">
           <Plus size={18} aria-hidden="true" />
@@ -605,7 +639,7 @@ function ContactMessagesPanel({
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="font-semibold text-white">{contactMessage.name}</p>
-                  <a className="text-sm text-cyan-200 hover:text-cyan-100" href={`mailto:${contactMessage.email}`}>
+                  <a className="text-sm text-violet-300 hover:text-fuchsia-200" href={`mailto:${contactMessage.email}`}>
                     {contactMessage.email}
                   </a>
                 </div>
@@ -672,6 +706,7 @@ function toProjectPayload(project: Project) {
   return {
     title: project.title,
     shortDescription: project.summary,
+    longDescription: project.longDescription,
     caseStudy: project.caseStudy,
     role: project.role,
     technologies: project.stack,
@@ -681,8 +716,98 @@ function toProjectPayload(project: Project) {
     status: project.status,
     displayOrder: project.displayOrder,
     problem: project.problem,
+    solution: project.solution,
     architecture: project.architecture,
+    technicalDecisions: project.technicalDecisions,
     highlights: project.highlights,
     technicalChallenges: project.technicalChallenges,
+    lessons: project.lessons,
+    result: project.result,
+    year: project.year,
+    published: project.published,
+    accentFrom: project.accentFrom,
+    accentTo: project.accentTo,
   };
+}
+
+type ManagedField = {
+  key: string;
+  label: string;
+  type?: "number" | "textarea";
+};
+
+type ManagedItem = {
+  id?: number;
+  archived?: boolean;
+};
+
+function ManagedCollectionPanel<T extends ManagedItem>({
+  title,
+  endpoint,
+  token,
+  items,
+  setItems,
+  setMessage,
+  fields,
+}: {
+  title: string;
+  endpoint: string;
+  token: string;
+  items: T[];
+  setItems: (items: T[]) => void;
+  setMessage: (message: string) => void;
+  fields: ManagedField[];
+}) {
+  const initialDraft = () => Object.fromEntries(fields.map((field) => [field.key, field.key === "displayOrder" ? "0" : ""]));
+  const [draft, setDraft] = useState<Record<string, string>>(initialDraft);
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  function edit(item: T) {
+    setEditingId(item.id ?? null);
+    const record = item as Record<string, unknown>;
+    setDraft(Object.fromEntries(fields.map((field) => [field.key, String(record[field.key] ?? "")] )));
+  }
+
+  async function save(event: FormEvent) {
+    event.preventDefault();
+    const payload: Record<string, string | number> = { ...draft };
+    if ("displayOrder" in payload) payload.displayOrder = Number(payload.displayOrder || 0);
+    const saved = editingId
+      ? await adminRequest<T>(`${endpoint}/${editingId}`, token, { method: "PATCH", body: JSON.stringify(payload) })
+      : await adminRequest<T>(endpoint, token, { method: "POST", body: JSON.stringify(payload) });
+    setItems([saved, ...items.filter((item) => item.id !== saved.id)]);
+    setEditingId(null);
+    setDraft(initialDraft());
+    setMessage(`${title} saved.`);
+  }
+
+  async function archive(item: T) {
+    if (!item.id || !window.confirm(`Archive this ${title.toLowerCase().slice(0, -1)}?`)) return;
+    const saved = await adminRequest<T>(`${endpoint}/${item.id}`, token, { method: "DELETE" });
+    setItems(items.map((existing) => (existing.id === saved.id ? saved : existing)));
+    setMessage(`${title} archived.`);
+  }
+
+  return (
+    <section className="rounded-lg border border-white/10 bg-white/[0.035] p-5">
+      <h2 className="text-xl font-semibold text-white">{title}</h2>
+      <form className="mt-5 grid gap-3" onSubmit={(event) => void save(event)}>
+        <div className="grid gap-3 md:grid-cols-2">
+          {fields.map((field) => (
+            <label key={field.key} className={`field-label ${field.type === "textarea" ? "md:col-span-2" : ""}`}>
+              {field.label}
+              {field.type === "textarea" ? <textarea className="field" rows={3} value={draft[field.key]} onChange={(event) => setDraft({ ...draft, [field.key]: event.target.value })} /> : <input className="field" type={field.type ?? "text"} value={draft[field.key]} onChange={(event) => setDraft({ ...draft, [field.key]: event.target.value })} />}
+            </label>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-3"><button className="button-primary" type="submit"><Save size={16} aria-hidden="true" />{editingId ? "Update" : `Add ${title}`}</button>{editingId ? <button className="button-secondary" type="button" onClick={() => { setEditingId(null); setDraft(initialDraft()); }}>Cancel</button> : null}</div>
+      </form>
+      <div className="mt-5 grid gap-2">
+        {items.filter((item) => !item.archived).map((item) => {
+          const record = item as Record<string, unknown>;
+          return <article key={item.id ?? JSON.stringify(item)} className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 py-3"><p className="text-sm text-slate-200">{fields.slice(0, 3).map((field) => String(record[field.key] ?? "")).filter(Boolean).join(" · ")}</p><div className="flex gap-2"><button className="icon-link" type="button" onClick={() => edit(item)}>Edit</button><button className="icon-link" type="button" onClick={() => void archive(item)}><Archive size={16} aria-hidden="true" />Archive</button></div></article>;
+        })}
+      </div>
+    </section>
+  );
 }

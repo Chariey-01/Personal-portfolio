@@ -1,44 +1,66 @@
+import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { PortfolioContentProvider } from "./data/PortfolioContentContext";
+import { AdminApp } from "./sections/AdminApp";
 import { About } from "./sections/About";
-import { CaseStudies } from "./sections/CaseStudies";
 import { Contact } from "./sections/Contact";
 import { Experience } from "./sections/Experience";
 import { Footer } from "./sections/Footer";
 import { Hero } from "./sections/Hero";
 import { Navigation } from "./sections/Navigation";
+import { NotFound } from "./sections/NotFound";
+import { ProjectDetail } from "./sections/ProjectDetail";
 import { Projects } from "./sections/Projects";
 import { Skills } from "./sections/Skills";
-import { AdminApp } from "./sections/AdminApp";
-import { PortfolioContentProvider } from "./data/PortfolioContentContext";
 import { Testimonials } from "./sections/Testimonials";
 import { ThemeProvider } from "./theme/ThemeContext";
 
-export default function App() {
-  if (window.location.pathname.startsWith("/admin")) {
-    return (
-      <ThemeProvider>
-        <AdminApp />
-      </ThemeProvider>
-    );
-  }
+function PublicHome() {
+  return (
+    <div className="public-site min-h-screen">
+      <Navigation />
+      <main>
+        <Hero />
+        <Projects />
+        <About />
+        <Skills />
+        <Experience />
+        <Testimonials />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function ProjectRoute() {
+  const { slug = "" } = useParams();
+  return <ProjectDetail slug={slug} />;
+}
+
+function AppRoutes() {
+  const navigate = useNavigate();
 
   return (
+    <Routes>
+      <Route
+        path="/admin/*"
+        element={
+        <AdminApp onAuthenticated={() => navigate("/admin/dashboard")} onSignOut={() => navigate("/admin")} />
+        }
+      />
+      <Route path="/" element={<PortfolioContentProvider><PublicHome /></PortfolioContentProvider>} />
+      <Route path="/projects/:slug" element={<PortfolioContentProvider><ProjectRoute /></PortfolioContentProvider>} />
+      <Route path="*" element={<PortfolioContentProvider><NotFound /></PortfolioContentProvider>} />
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
     <ThemeProvider>
-      <PortfolioContentProvider>
-        <div className="min-h-screen bg-ink text-slate-100">
-          <Navigation />
-          <main>
-            <Hero />
-            <About />
-            <Skills />
-            <Projects />
-            <CaseStudies />
-            <Testimonials />
-            <Experience />
-            <Contact />
-          </main>
-          <Footer />
-        </div>
-      </PortfolioContentProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

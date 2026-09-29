@@ -1,30 +1,20 @@
-import { SectionHeading } from "../components/SectionHeading";
+import { ArrowUpRight } from "lucide-react";
 import { ProjectCard } from "../components/ProjectCard";
 import { usePortfolioContent } from "../data/PortfolioContentContext";
 
 export function Projects() {
   const { projects, loading, error } = usePortfolioContent();
-  const featuredProjects = projects.filter((project) => !project.archived && project.status !== "needs-details");
-
+  const published = projects.filter((project) => !project.archived && project.status !== "Archived" && project.published !== false);
+  const [featured, ...secondary] = published;
   return (
-    <section id="projects" className="section-shell bg-ink">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <SectionHeading
-          eyebrow="Featured Projects"
-          title="Projects with code, decisions, and tradeoffs."
-          summary="This section is now API-driven, so newly completed projects can be added from the admin dashboard without changing React source."
-        />
-        {error ? (
-          <p className="mb-5 rounded-md border border-amber-300/30 bg-amber-300/10 p-4 text-sm text-amber-100">
-            Showing bundled project content because the portfolio API is unavailable.
-          </p>
-        ) : null}
-        {loading ? <p className="mb-5 text-sm text-slate-400">Loading current projects...</p> : null}
-        <div className="grid gap-5 md:grid-cols-2">
-          {featuredProjects.map((project, index) => (
-            <ProjectCard key={project.title} project={project} featured={index === 0} />
-          ))}
-        </div>
+    <section id="projects" className="projects-editorial">
+      <div className="page-width">
+        <div className="section-intro"><div><p className="eyebrow">Selected work / 01</p><h2>Projects are where the engineering becomes visible.</h2></div><p>Each project has a problem, a set of decisions, and a record of what I learned while building it.</p></div>
+        {error ? <p className="inline-notice">Showing available portfolio data while the live API is unavailable.</p> : null}
+        {loading ? <p className="loading-note">Loading current work...</p> : null}
+        {featured ? <ProjectCard project={featured} featured /> : null}
+        <div className="project-secondary-grid">{secondary.map((project) => <ProjectCard key={project.slug ?? project.title} project={project} />)}</div>
+        <a className="archive-link" href="https://github.com/Chariey-01" target="_blank" rel="noreferrer">More work lives on GitHub <ArrowUpRight aria-hidden="true" size={17} /></a>
       </div>
     </section>
   );

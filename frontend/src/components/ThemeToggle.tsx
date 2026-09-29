@@ -19,7 +19,7 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
           <button
             key={option.value}
             className={`inline-flex min-h-9 items-center gap-2 rounded px-3 text-sm font-semibold transition ${
-              active ? "bg-cyan-300 text-slate-950" : "text-slate-300 hover:bg-white/10 hover:text-white"
+              active ? "bg-fuchsia-400 text-slate-950" : "text-slate-300 hover:bg-white/10 hover:text-white"
             }`}
             type="button"
             aria-pressed={active}

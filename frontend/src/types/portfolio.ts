@@ -30,14 +30,24 @@ export type Project = {
   status: "In Progress" | "Completed" | "Live" | "Archived" | "shipped" | "in-progress" | "needs-details";
   summary: string;
   shortDescription?: string;
+  longDescription?: string | null;
   caseStudy?: string;
   role: string;
   stack: string[];
   technologies?: string[];
   problem: string;
+  solution?: string | null;
   architecture: string[];
+  technicalDecisions?: string[];
   highlights: string[];
   technicalChallenges: string[];
+  lessons?: string[];
+  result?: string | null;
+  year?: number | null;
+  published?: boolean;
+  accentFrom?: string | null;
+  accentTo?: string | null;
+  images?: ProjectImage[];
   githubUrl?: string;
   repoUrl?: string;
   liveUrl?: string;
@@ -45,6 +55,14 @@ export type Project = {
   featured?: boolean;
   displayOrder?: number;
   archived?: boolean;
+};
+
+export type ProjectImage = {
+  id: number;
+  imageUrl: string;
+  altText: string;
+  caption?: string | null;
+  displayOrder: number;
 };
 
 export type SkillGroup = {
@@ -55,11 +73,48 @@ export type SkillGroup = {
   }[];
 };
 
+export type Skill = {
+  id?: number;
+  category: string;
+  name: string;
+  detail: string;
+  familiarity: "Comfortable" | "Worked with" | "Growing" | "Currently learning" | string;
+  displayOrder?: number;
+  archived?: boolean;
+};
+
 export type TimelineItem = {
   label: string;
   title: string;
   organization: string;
   description: string;
+};
+
+export type ExperienceItem = TimelineItem & {
+  id?: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  displayOrder?: number;
+  archived?: boolean;
+};
+
+export type EducationItem = {
+  id?: number;
+  institution: string;
+  program: string;
+  description?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  displayOrder?: number;
+  archived?: boolean;
+};
+
+export type SocialLink = {
+  id?: number;
+  label: string;
+  url: string;
+  displayOrder?: number;
+  archived?: boolean;
 };
 
 export type Testimonial = {

@@ -15,16 +15,16 @@ export function DocumentsDropdown({
   compact = false,
   align = "left",
 }: DocumentsDropdownProps) {
-  const panelAlignment = align === "right" ? "right-0" : "left-0";
+  const panelAlignment = align === "right" ? "documents-panel-right" : "";
 
   return (
-    <details className="group relative z-30">
-      <summary className={`button-secondary cursor-pointer list-none ${compact ? "min-h-10 px-4 py-2 text-sm" : ""}`}>
+    <details className={`documents-menu ${compact ? "documents-menu-compact" : ""}`}>
+      <summary>
         <FileText aria-hidden="true" size={18} />
         Documents
         <ChevronDown className="transition group-open:rotate-180" aria-hidden="true" size={16} />
       </summary>
-      <div className={`absolute ${panelAlignment} z-30 mt-2 grid w-72 max-w-[calc(100vw-2rem)] gap-2 rounded-md border border-white/10 bg-ink/95 p-2 shadow-soft backdrop-blur`}>
+      <div className={`documents-panel ${panelAlignment}`}>
         {resumeUrl ? (
           <>
             <DocumentAction label="View Resume" url={resumeUrl} />
@@ -63,7 +63,7 @@ function DocumentAction({
 }) {
   return (
     <a
-      className="flex min-h-10 items-center gap-2 rounded px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10 hover:text-cyan-100"
+      className="document-action"
       href={url}
       target={download ? undefined : "_blank"}
       rel={download ? undefined : "noreferrer"}
@@ -77,7 +77,7 @@ function DocumentAction({
 
 function UnavailableDocument({ label }: { label: string }) {
   return (
-    <span className="flex min-h-10 items-center gap-2 rounded px-3 py-2 text-sm text-slate-500">
+    <span className="document-unavailable">
       <Download aria-hidden="true" size={16} />
       {label}
     </span>

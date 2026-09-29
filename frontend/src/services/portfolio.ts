@@ -1,4 +1,14 @@
-import type { ContactMessage, PortfolioDocument, Profile, Project, Testimonial } from "../types/portfolio";
+import type {
+  ContactMessage,
+  EducationItem,
+  ExperienceItem,
+  PortfolioDocument,
+  Profile,
+  Project,
+  Skill,
+  SocialLink,
+  Testimonial,
+} from "../types/portfolio";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -21,6 +31,26 @@ export function getProjects() {
 
 export function getTestimonials() {
   return requestJson<Testimonial[]>("/api/testimonials");
+}
+
+export function getSkills() {
+  return requestJson<Skill[]>("/api/skills");
+}
+
+export function getExperience() {
+  return requestJson<ExperienceItem[]>("/api/experience");
+}
+
+export function getEducation() {
+  return requestJson<EducationItem[]>("/api/education");
+}
+
+export function getSocialLinks() {
+  return requestJson<SocialLink[]>("/api/social-links");
+}
+
+export function getProject(slug: string) {
+  return requestJson<Project>(`/api/projects/${encodeURIComponent(slug)}`);
 }
 
 export function getResume() {

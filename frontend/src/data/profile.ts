@@ -27,6 +27,10 @@ export const profile: Profile = {
 export const projects: Project[] = [
   {
     title: "AuRevia",
+    slug: "aurevia",
+    year: 2026,
+    accentFrom: "#0e7490",
+    accentTo: "#be185d",
     status: "Live",
     summary:
       "Team e-commerce SPA with routed catalog, product, cart, and management screens. My focus was frontend flow, shared UI consistency, and stateful shopping interactions.",
@@ -53,6 +57,10 @@ export const projects: Project[] = [
   },
   {
     title: "Learning Roadmap App",
+    slug: "learning-roadmap-app",
+    year: 2026,
+    accentFrom: "#047857",
+    accentTo: "#0369a1",
     status: "Live",
     summary:
       "Solo learning tracker for roadmap progress, streaks, achievements, and local persistence. The project is strongest as a React state and responsive UI exercise.",
@@ -75,6 +83,10 @@ export const projects: Project[] = [
   },
   {
     title: "Python Project Management CLI",
+    slug: "python-project-management-cli",
+    year: 2026,
+    accentFrom: "#7c3aed",
+    accentTo: "#c2410c",
     status: "Completed",
     summary:
       "Python CLI project focused on object-oriented modeling, data structures, and testable backend logic without a browser UI.",

@@ -1,28 +1,14 @@
-import { SectionHeading } from "../components/SectionHeading";
-import { timeline } from "../data/profile";
+import { usePortfolioContent } from "../data/PortfolioContentContext";
 
 export function Experience() {
+  const { experience, education } = usePortfolioContent();
   return (
-    <section id="experience" className="section-shell bg-ink">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <SectionHeading
-          eyebrow="Experience"
-          title="Training and project experience, labelled honestly."
-        />
-        <div className="relative grid gap-5 before:absolute before:left-4 before:top-2 before:hidden before:h-[calc(100%-1rem)] before:w-px before:bg-white/10 md:before:block">
-          {timeline.map((item) => (
-            <article key={`${item.label}-${item.title}`} className="timeline-card">
-              <p className="relative font-mono text-sm uppercase tracking-[0.18em] text-cyan-200 md:pl-10">
-                <span className="absolute left-[0.82rem] top-1 hidden h-3 w-3 rounded-full border border-cyan-200 bg-ink shadow-[0_0_18px_rgba(103,232,249,0.45)] md:block" aria-hidden="true" />
-                {item.label}
-              </p>
-              <div>
-                <h3 className="text-xl font-semibold text-white">{item.title}</h3>
-                <p className="mt-1 text-slate-400">{item.organization}</p>
-                <p className="mt-3 leading-7 text-slate-300">{item.description}</p>
-              </div>
-            </article>
-          ))}
+    <section id="journey" className="journey-editorial">
+      <div className="page-width">
+        <div className="section-intro"><div><p className="eyebrow">Journey / 04</p><h2>A developing engineering practice, described honestly.</h2></div><p>Training, self-directed learning, and projects continue to shape how I approach full-stack systems.</p></div>
+        <div className="journey-columns">
+          <div><p className="journey-label">Experience & training</p><ol>{experience.filter((item) => !item.archived).map((item) => <li key={item.id ?? item.title}><span>{item.label}</span><h3>{item.title}</h3><strong>{item.organization}</strong><p>{item.description}</p></li>)}</ol></div>
+          <div><p className="journey-label">Education</p><ol>{education.length ? education.filter((item) => !item.archived).map((item) => <li key={item.id ?? item.program}><span>{[item.startDate, item.endDate].filter(Boolean).join(" - ") || "Learning path"}</span><h3>{item.program}</h3><strong>{item.institution}</strong><p>{item.description}</p></li>) : <li><span>Foundation</span><h3>Computer science and software engineering</h3><strong>Egerton University & Moringa School</strong><p>Early computer science foundations followed by deliberate, practical software-engineering training.</p></li>}</ol></div>
         </div>
       </div>
     </section>

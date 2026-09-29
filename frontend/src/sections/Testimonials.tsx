@@ -1,35 +1,12 @@
-import { SectionHeading } from "../components/SectionHeading";
+import { Quote } from "lucide-react";
 import { usePortfolioContent } from "../data/PortfolioContentContext";
 
 export function Testimonials() {
   const { testimonials } = usePortfolioContent();
-
-  if (testimonials.length === 0) {
-    return null;
-  }
-
+  if (!testimonials.length) return null;
   return (
-    <section id="testimonials" className="section-shell bg-ink">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
-        <SectionHeading
-          eyebrow="Testimonials"
-          title="People who can speak to the work."
-          summary="Only approved testimonials are shown publicly."
-        />
-        <div className="grid gap-5 md:grid-cols-2">
-          {testimonials.map((testimonial) => (
-            <article key={testimonial.id} className="testimonial-card rounded-lg border border-white/10 bg-white/[0.045] p-6 shadow-soft">
-              <p className="leading-7 text-slate-200">{testimonial.text}</p>
-              <div className="mt-5">
-                <p className="font-semibold text-white">{testimonial.personName}</p>
-                <p className="text-sm text-slate-400">
-                  {[testimonial.role, testimonial.organization].filter(Boolean).join(", ")}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
+    <section className="testimonials-editorial" aria-labelledby="testimonials-title">
+      <div className="page-width"><p className="eyebrow">Words from collaborators / 05</p><h2 id="testimonials-title">People who can speak to the work.</h2><div className="testimonial-lines">{testimonials.map((testimonial) => <figure key={testimonial.id}><Quote aria-hidden="true" size={22} /><blockquote>{testimonial.text}</blockquote><figcaption>{testimonial.personName}{testimonial.role ? `, ${testimonial.role}` : ""}{testimonial.organization ? ` at ${testimonial.organization}` : ""}</figcaption></figure>)}</div></div>
     </section>
   );
 }
