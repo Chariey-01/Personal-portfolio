@@ -2,66 +2,44 @@
 
 ## Intent
 
-The public portfolio becomes an editorial engineering profile, not a dark dashboard or generic product landing page. It should feel composed, grounded, and human: high-contrast reading surfaces, deliberate type, project artwork with controlled color, and enough playfulness to be memorable without becoming performative.
+The public portfolio is a project-first engineering profile: modern, technical, youthful, confident, and polished. It retains the asymmetric hierarchy and case-study reading flow, but uses a dark modern interface rather than an editorial-print treatment.
 
-## Typography
+## Theme Tokens
 
-- **Display:** an editorial serif stack (`Iowan Old Style`, `Baskerville`, `Times New Roman`) for large section and project titles. This makes narrative and project work feel intentional without relying on a remote font.
-- **Body:** Inter/system sans for paragraphs, controls, and navigation.
-- **Utility labels:** compact monospace for status, dates, stack labels, and engineering metadata.
-- **Scale:** hero name is large but bounded; section titles are distinctly smaller; card headings never mimic hero scale. Letter spacing remains normal except for small utility labels.
-- **Hierarchy:** labels orient, headlines explain, body text provides evidence, and links move visitors forward.
+- **Background:** `#09090f`
+- **Elevated surface:** `#11111a`
+- **Raised surface:** `#171722`
+- **Primary text:** `#f7f5ff`
+- **Muted text:** `#a8a3b5`
+- **Borders:** `rgba(255, 255, 255, .1)`
+- **Violet:** `#7c3aed`
+- **Purple:** `#a855f7`
+- **Pink:** `#ec4899`
+- **Soft pink:** `#f472b6`
+- **Brand gradient:** `linear-gradient(120deg, #7c3aed, #a855f7, #ec4899)`
 
-## Layout
+The brand gradient is an accent for the primary CTA, the display-name treatment, and selected project artwork. It is not a page background, a default card treatment, or a substitute for hierarchy.
 
-- **Container:** `min(1180px, calc(100vw - 2rem))` for standard sections.
-- **Hero:** asymmetric two-column composition at desktop: identity and actions on the left; portrait/status note and a small technical record on the right. It collapses cleanly to one reading column on mobile.
-- **Sections:** full-width paper bands, separated by rules and spacing rather than floating section cards.
-- **Project gallery:** one dominant featured project with a wide art panel, then a deliberately uneven secondary grid. Projects are not six equal boxes.
-- **Case study:** narrow readable prose column paired with a sticky metadata rail on large screens.
+## Typography And Layout
 
-## Color
-
-- **Background:** warm off-white paper (`#f6f0e8`) with pale sand bands (`#eee5d7`).
-- **Foreground:** ink (`#172033`) and softened charcoal (`#495166`).
-- **Accent:** deep coral (`#c34d3f`) for focus, actions, and restrained emphasis.
-- **Project gradients:** only artwork frames, project hover states, and occasional section rules use color. Proposed initial directions are warm ember for CharityOS, lake/data blue for CampusPulse, indigo/charcoal for DevCrypt, and citrus/rust for delivery work.
-- **No default glass, neon, or gradient text.**
+- **Display and body:** a contemporary Inter/system sans stack; no traditional serif display treatment.
+- **Utility labels:** compact monospace for dates, stacks, and status metadata.
+- **Hero:** a strong two-line `Charity Jepkoech` composition with one controlled violet/pink accent; role and body copy stay near-white for contrast.
+- **Sections:** full-width dark bands with rules, spacing, and readable type rather than floating-card-heavy layouts.
+- **Projects:** one dominant project plus an uneven secondary gallery. Each project owns its own art direction while the site keeps its violet/pink identity.
+- **Case study:** a readable prose column and evidence-first image gallery; action links remain quiet except for the primary path.
 
 ## Component Language
 
-- **Navigation:** thin bordered header, plain text links, a small resume link, and no visible owner/admin entry point.
-- **Buttons:** compact editorial actions with one filled primary and quiet text or underlined secondary actions. Icon-only controls use accessible labels.
-- **Links:** underlined on hover/focus; external links include an arrow icon when useful.
-- **Project cards:** asymmetrical image-first stories with metadata anchored to edges. Cards use small radii and a tangible border, never a generic frosted panel.
-- **Tags:** simple inline labels separated by dots or rules, not pills scattered throughout the page.
-- **Section headers:** small mono label, large serif title, optional short body copy, and a thin rule.
+- **Navigation:** minimal, dark, and calm with subtle violet/pink hover and focus accents.
+- **Surfaces:** dark layers separated by border, spacing, and modest elevation, never broad glassmorphism.
+- **Actions:** only the primary CTA uses the brand gradient. Supporting actions are underlined text links or quiet icon controls.
+- **Project art:** project-specific gradients remain allowed: CharityOS may use violet/magenta, CampusPulse indigo/violet, DevCrypt deep purple with controlled pink, and delivery work can retain orange.
+- **Motion:** a small hover lift, image scale, and link transition only. `prefers-reduced-motion` disables nonessential transitions and smooth scrolling.
 
-## Motion
+## Accessibility
 
-- Hover lifts are subtle and only on actionable project/media surfaces.
-- Page/section entrance motion is optional and limited to opacity/translation.
-- The hero portrait has no decorative floating animation.
-- `prefers-reduced-motion` removes transitions and smooth scrolling.
-
-## Project Gallery
-
-- The featured project is a horizontal editorial composition: project identity and evidence beside a sizable screenshot or purpose-built gradient artwork.
-- Secondary projects use varied grid spans at desktop, one-column chronological reading order on mobile.
-- A project with no supplied screenshot receives an intentional art direction panel, clearly labelled as a project overview rather than pretending to be product media.
-- Project cards link to dedicated `/projects/:slug` case studies and surface source/live links only when configured.
-
-## Mobile
-
-- The navigation becomes a labeled menu button with a predictable panel; its tap targets are at least 44px.
-- Hero actions wrap in logical importance order and never become four equal large buttons.
-- Project art remains above content, with metadata and links below for a comfortable reading order.
-- Case-study metadata moves above prose and screenshot galleries preserve aspect ratio.
-- Admin forms remain single-column at narrow widths with persistent save feedback.
-
-## Accessibility Checks
-
-- Every navigation and action control has keyboard focus, readable contrast, and a semantic role.
-- Project images require descriptive alt text in the CMS.
-- Decorative gradient art is hidden from assistive technology.
-- Headings remain sequential and landmarks identify navigation, main content, and footer.
+- Body content uses near-white or tested muted text, not purple/pink, for normal reading.
+- Every interactive element has an obvious keyboard focus state.
+- Images supplied through the CMS require useful alternative text.
+- Mobile navigation has predictable touch targets; public layouts must not introduce horizontal scrolling.

@@ -44,6 +44,6 @@ The [developer-portfolios collection](https://github.com/emmabostian/developer-p
 - Put `Charity Jepkoech` and a precise full-stack direction first; keep the language aspirational but evidence-based.
 - Make the project gallery the visual centre of the page using uneven editorial compositions, clear status, and restrained project-specific gradient atmospheres.
 - Carry each substantial project into a real route with a readable case study, technical decision record, links, and ordered screenshots.
-- Use a light, paper-like public surface with dark ink, a warm editorial accent, and limited saturated project colors. Avoid the existing dark/cyan card system entirely.
+- Use a dark modern public surface with restrained violet, purple, and pink accents. Avoid generic dark/cyan dashboard styling, gradient overload, and traditional editorial-print treatments.
 - Keep the owner CMS private and utilitarian. It serves content maintenance; it does not need to mimic the public site's visual language.
 - Preserve accessibility, keyboard navigation, readable contrast, and reduced-motion support as design constraints rather than finishing touches.
