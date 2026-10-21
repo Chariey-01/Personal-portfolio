@@ -11,7 +11,7 @@ export function About() {
         <SectionHeading
           eyebrow="About"
           title={profile.headline}
-          summary="Computer Science foundations, an interrupted university path, deliberate training, and a growing body of full-stack work."
+          summary="Computer Science studies at Egerton University, independent learning through edX and freeCodeCamp, practical training at Moringa School, and a growing body of full-stack work."
         />
         <div className="about-panel grid gap-5 rounded-lg border border-white/10 bg-white/[0.035] p-6 text-slate-300 shadow-soft">
           {storyParagraphs.map((paragraph) => (

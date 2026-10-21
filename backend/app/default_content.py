@@ -8,10 +8,10 @@ DEFAULT_PROFILE = {
     "bio": "I build React interfaces, Flask APIs, and database-backed projects with a focus on readable systems I can keep improving.",
     "story": (
         "My path into engineering has not been perfectly linear, but I kept building. "
-        "I first studied Computer Science at Egerton University, where I gained early foundations, "
-        "even though that university path was interrupted before completion. I later chose a more "
-        "deliberate software-engineering route through Moringa School and through the work that has "
-        "taught me the most: building applications, breaking them, rebuilding them, and learning in public. "
+        "I previously studied Computer Science at Egerton University, where I built early foundations in computing. "
+        "That path was interrupted before completion, and I later pursued independent software engineering study "
+        "through edX and freeCodeCamp before joining Moringa School for practical full-stack training. "
+        "The work that has taught me the most is building applications, breaking them, rebuilding them, and learning in public. "
         "I tend to aim higher than my current level, which means I am often working on projects that stretch me. "
         "That has made me persistent, practical, and serious about becoming a stronger full-stack engineer."
     ),

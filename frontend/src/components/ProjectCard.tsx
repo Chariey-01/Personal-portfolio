@@ -7,7 +7,8 @@ type ProjectCardProps = {
 };
 
 export function ProjectCard({ project, featured = false }: ProjectCardProps) {
-  const previewItems = project.stack.slice(0, featured ? 5 : 3);
+  const stack = Array.isArray(project.stack) ? project.stack : [];
+  const previewItems = stack.slice(0, featured ? 5 : 3);
   const repoUrl = project.repoUrl ?? project.githubUrl;
   const status = project.status === "shipped" ? "Live" : project.status.replace("-", " ");
 
@@ -62,7 +63,7 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
         <p className="mt-5 flex-1 leading-7 text-slate-300">{project.summary}</p>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {project.stack.map((item) => (
+          {stack.map((item) => (
             <span key={item} className="tech-chip rounded bg-cyan-300/10 px-3 py-1 text-sm text-cyan-100">
               {item}
             </span>
