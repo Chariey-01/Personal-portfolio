@@ -120,7 +120,7 @@ describe("portfolio app", () => {
     expect(within(nav).getByRole("link", { name: /experience/i })).toHaveAttribute("href", "#experience");
     expect(await within(nav).findAllByRole("link", { name: /view resume/i })).toHaveLength(1);
     expect(screen.getByRole("heading", { name: /tools I can discuss/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /training and project experience/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /education and training, kept separate from employment/i })).toBeInTheDocument();
   });
 
   it("renders featured projects and preserves verified links", async () => {
@@ -187,8 +187,9 @@ describe("portfolio app", () => {
     vi.spyOn(window, "fetch").mockImplementation(() => Promise.reject(new Error("backend down")));
     render(<App />);
 
-    expect(await screen.findByRole("heading", { name: "AuRevia" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Learning Roadmap App" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Delivaroo" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "CampusPulse" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "AuRevia" })).toBeInTheDocument();
     expect(screen.getByText(/portfolio API is unavailable/i)).toBeInTheDocument();
   });
 
