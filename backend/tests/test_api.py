@@ -1,7 +1,9 @@
 from io import BytesIO
 
 from app import create_app
+from app.config import normalize_database_url
 from app.extensions import db
+from app.models import Project
 from app.routes.contact import recent_submissions
 from werkzeug.security import generate_password_hash
 
@@ -148,7 +150,13 @@ def test_public_projects_seed_existing_content_and_statuses():
     assert response.status_code == 200
     titles = [project["title"] for project in response.get_json()]
     assert "AuRevia" in titles
+    assert "Delivaroo" in titles
+    assert "CampusPulse" in titles
     assert "Learning Roadmap App" in titles
+    live_urls = {project["title"]: project["liveUrl"] for project in response.get_json()}
+    assert live_urls["Delivaroo"] == "https://delivaroo.vercel.app"
+    assert live_urls["CampusPulse"] == "https://campuspulse-two.vercel.app"
+    assert all(not (url or "").endswith(".onrender.com") for url in live_urls.values())
 
 
 def test_resume_valid_pdf_upload_invalid_file_and_size_validation():
@@ -300,3 +308,31 @@ def test_profile_retrieval_and_admin_update():
     )
     assert updated.status_code == 200
     assert updated.get_json()["headline"] == "Building practical full-stack systems."
+
+
+def test_normalize_database_url_accepts_postgres_scheme():
+    assert normalize_database_url("postgres://user:pass@host/db") == "postgresql://user:pass@host/db"
+    assert normalize_database_url("sqlite:///portfolio.db") == "sqlite:///portfolio.db"
+
+
+def test_seed_adds_missing_projects_without_replacing_existing_rows():
+    app = create_app(TestConfig)
+    with app.app_context():
+        db.create_all()
+        db.session.add(
+            Project(
+                title="Custom AuRevia",
+                slug="aurevia",
+                short_description="Keep this description.",
+                technologies=["React"],
+                status="Live",
+            )
+        )
+        db.session.commit()
+    client = app.test_client()
+    payload = client.get("/api/projects").get_json()
+    by_slug = {project["slug"]: project for project in payload}
+    assert by_slug["aurevia"]["title"] == "Custom AuRevia"
+    assert by_slug["aurevia"]["summary"] == "Keep this description."
+    assert "delivaroo" in by_slug
+    assert "campuspulse" in by_slug

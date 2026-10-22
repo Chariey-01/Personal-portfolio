@@ -227,6 +227,12 @@ pytest
 
 ## Deployment
 
+Production project loading was failing because the Vercel site is a static Vite build and `VITE_API_BASE_URL` was empty, so the browser requested `/api/projects` on Vercel and received a 404. The Render service at `https://personal-portfolio.onrender.com` is suspended by its owner, so it cannot serve the API until that service is restored.
+
+`api/index.py` exposes the existing Flask app on the same origin for Vercel. Leave `VITE_API_BASE_URL` empty for that setup. When `DATABASE_URL` is unset, the function uses SQLite under `/tmp`, which is enough to seed and read projects but does not keep contact messages after a new instance starts. Set `DATABASE_URL` to PostgreSQL for durable data. Hosts that provide `postgres://` are normalized to `postgresql://`.
+
+`GET /api/projects` adds any missing seeded project by slug and does not overwrite a project row that is already stored.
+
 Recommended deployment split:
 
 - Frontend: Vercel

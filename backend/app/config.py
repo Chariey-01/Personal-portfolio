@@ -6,9 +6,16 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 
+def normalize_database_url(url: str) -> str:
+    """SQLAlchemy 2 rejects the legacy postgres:// scheme used by some hosts."""
+    if url.startswith("postgres://"):
+        return "postgresql://" + url[len("postgres://") :]
+    return url
+
+
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-change-me")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///portfolio.db")
+    SQLALCHEMY_DATABASE_URI = normalize_database_url(os.getenv("DATABASE_URL", "sqlite:///portfolio.db"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     FRONTEND_ORIGINS = [
         origin.strip()
