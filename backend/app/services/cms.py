@@ -13,15 +13,17 @@ def slugify(value: str) -> str:
 
 
 def ensure_default_content() -> None:
-    """Seed only missing owner content so fresh databases preserve the portfolio."""
+    """Add missing profile and project rows without overwriting records that already exist."""
     changed = False
     if Profile.query.first() is None:
         db.session.add(Profile(**DEFAULT_PROFILE))
         changed = True
 
-    if Project.query.first() is None:
-        for project in DEFAULT_PROJECTS:
-            db.session.add(Project(**project))
+    existing_slugs = {slug for (slug,) in db.session.query(Project.slug).all()}
+    for project in DEFAULT_PROJECTS:
+        if project["slug"] in existing_slugs:
+            continue
+        db.session.add(Project(**project))
         changed = True
 
     if changed:

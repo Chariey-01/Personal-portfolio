@@ -78,7 +78,7 @@ textarea {
   }
 
   .nav-link {
-    @apply rounded px-1 py-2 font-mono text-xs uppercase tracking-[0.18em] text-slate-300 transition duration-200 hover:text-cyan-200;
+    @apply rounded px-1 py-2 font-mono text-xs uppercase tracking-[0.18em] text-slate-300 transition duration-200 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-2 focus-visible:ring-offset-ink;
   }
 
   .icon-link {

@@ -6,8 +6,8 @@ export function Experience() {
     <section id="experience" className="section-shell bg-ink">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHeading
-          eyebrow="Experience"
-          title="Training and project experience, labelled honestly."
+          eyebrow="Background"
+          title="Education and training, kept separate from employment."
         />
         <div className="relative grid gap-5 before:absolute before:left-4 before:top-2 before:hidden before:h-[calc(100%-1rem)] before:w-px before:bg-white/10 md:before:block">
           {timeline.map((item) => (
