@@ -13,13 +13,18 @@ def slugify(value: str) -> str:
 
 
 VERIFIED_LINK_FIELDS = ("image_url", "github_url", "live_url")
+PREVIOUS_PROFILE_IMAGE = "/images/profile/charity-jepkoech.png"
 
 
 def ensure_default_content() -> None:
     """Add missing rows and fill blank verified links without replacing owner edits."""
     changed = False
-    if Profile.query.first() is None:
+    profile = Profile.query.first()
+    if profile is None:
         db.session.add(Profile(**DEFAULT_PROFILE))
+        changed = True
+    elif profile.profile_image_url in (None, "", PREVIOUS_PROFILE_IMAGE):
+        profile.profile_image_url = DEFAULT_PROFILE["profile_image_url"]
         changed = True
 
     for project in DEFAULT_PROJECTS:

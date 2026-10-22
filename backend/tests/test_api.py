@@ -3,7 +3,7 @@ from io import BytesIO
 from app import create_app
 from app.config import normalize_database_url
 from app.extensions import db
-from app.models import Project
+from app.models import Profile, Project
 from app.routes.contact import recent_submissions
 from app.services.persistence import prepare_production_database
 from app.services.storage import is_safe_storage_key
@@ -306,6 +306,7 @@ def test_profile_retrieval_and_admin_update():
     public = client.get("/api/profile")
     assert public.status_code == 200
     assert "not been perfectly linear" in public.get_json()["story"]
+    assert public.get_json()["profileImage"] == "/images/profile/charity-jepkoech.jpg"
 
     updated = client.patch(
         "/api/admin/profile",
@@ -314,6 +315,31 @@ def test_profile_retrieval_and_admin_update():
     )
     assert updated.status_code == 200
     assert updated.get_json()["headline"] == "Building practical full-stack systems."
+
+
+def test_previous_profile_portrait_path_is_replaced_without_overwriting_uploads():
+    def store(image_url: str):
+        app = create_app(TestConfig)
+        with app.app_context():
+            db.create_all()
+            db.session.add(
+                Profile(
+                    name="Charity Jepkoech",
+                    role="Full Stack Software Engineer",
+                    email="charityjepkoech007@gmail.com",
+                    headline="Headline",
+                    bio="Bio",
+                    story="Story",
+                    profile_image_url=image_url,
+                    links=[],
+                    focus_stack=[],
+                )
+            )
+            db.session.commit()
+        return app.test_client().get("/api/profile").get_json()["profileImage"]
+
+    assert store("/images/profile/charity-jepkoech.png") == "/images/profile/charity-jepkoech.jpg"
+    assert store("/api/uploads/profile/custom.jpg") == "/api/uploads/profile/custom.jpg"
 
 
 def test_normalize_database_url_accepts_postgres_scheme():

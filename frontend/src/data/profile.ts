@@ -11,7 +11,7 @@ export const profile: Profile = {
   story:
     "My path into engineering has not been perfectly linear, but I kept building. I previously studied Computer Science at Egerton University, where I built early foundations in computing. That path was interrupted before completion, and I later pursued independent software engineering study through edX and freeCodeCamp before joining Moringa School for practical full-stack training. The work that has taught me the most is building applications, breaking them, rebuilding them, and learning in public. I tend to aim higher than my current level, which means I am often working on projects that stretch me. That has made me persistent, practical, and serious about becoming a stronger full-stack engineer.",
   // Replace the file under public/images/profile/ and update this path when a new portrait is provided.
-  profileImage: "/images/profile/charity-jepkoech.png",
+  profileImage: "/images/profile/charity-jepkoech.jpg",
   profileImageAlt: "Portrait of Charity Jepkoech",
   availability: "Open to full-stack software engineering opportunities",
   focusStack: ["React", "TypeScript", "Flask", "SQLAlchemy", "pytest"],

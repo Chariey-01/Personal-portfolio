@@ -54,8 +54,8 @@ export function Hero() {
                 className="h-full w-full object-cover object-center"
                 src={profile.profileImage}
                 alt={profile.profileImageAlt}
-                width={561}
-                height={976}
+                width={768}
+                height={768}
                 decoding="async"
               />
             </div>

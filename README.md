@@ -172,7 +172,7 @@ In `/admin`, use the Documents area to upload Resume, CV, Cover Letter, or Other
 
 ### Changing my profile photo
 
-Use the Profile / About image upload in `/admin`. The public portrait uses a square container with circular clipping, so the rendered photo stays truly circular. The original bundled source image remains `public/images/profile/charity-jepkoech.png`.
+Use the Profile / About image upload in `/admin`. The public portrait uses a square container with circular clipping, so the rendered photo stays truly circular. The bundled source image is `public/images/profile/charity-jepkoech.jpg`.
 
 ### Adding a testimonial
 

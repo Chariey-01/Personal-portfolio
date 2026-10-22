@@ -20,7 +20,7 @@ function mockApi(contactResponse = new Response(JSON.stringify({ message: "Messa
             headline: "I am building toward full-stack product engineering.",
             bio: "I build React interfaces, Flask APIs, and database-backed projects.",
             story: "My path into engineering has not been perfectly linear, but I kept building.",
-            profileImage: "/images/profile/charity-jepkoech.png",
+            profileImage: "/images/profile/charity-jepkoech.jpg",
             profileImageAlt: "Portrait of Charity Jepkoech",
             focusStack: ["React", "TypeScript", "Flask"],
             resumeUrl: "/api/uploads/resumes/current.pdf",
@@ -107,7 +107,7 @@ describe("portfolio app", () => {
     expect(await screen.findAllByText(/Documents/i)).not.toHaveLength(0);
     expect(screen.getByRole("img", { name: /portrait of Charity Jepkoech/i })).toHaveAttribute(
       "src",
-      "/images/profile/charity-jepkoech.png",
+      "/images/profile/charity-jepkoech.jpg",
     );
   });
 
