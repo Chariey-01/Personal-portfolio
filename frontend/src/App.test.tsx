@@ -182,4 +182,19 @@ describe("portfolio app", () => {
 
     expect(await screen.findByText(/please wait before sending another message/i)).toBeInTheDocument();
   });
+
+  it("falls back to bundled projects when the portfolio API fails", async () => {
+    vi.spyOn(window, "fetch").mockImplementation(() => Promise.reject(new Error("backend down")));
+    render(<App />);
+
+    expect(await screen.findByRole("heading", { name: "AuRevia" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Learning Roadmap App" })).toBeInTheDocument();
+    expect(screen.getByText(/portfolio API is unavailable/i)).toBeInTheDocument();
+  });
+
+  it("renders the Engineering in Practice section", async () => {
+    render(<App />);
+    expect(await screen.findByRole("heading", { name: /Engineering in Practice/i })).toBeInTheDocument();
+  });
+
 });

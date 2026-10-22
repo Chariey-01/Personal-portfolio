@@ -9,7 +9,8 @@ export const profile: Profile = {
   headline: "I am building toward full-stack product engineering.",
   bio: "I build React interfaces, Flask APIs, and database-backed projects. My current work is focused on clear state, readable backend logic, and deployable full-stack applications.",
   story:
-    "My path into engineering has not been perfectly linear, but I kept building. I first studied Computer Science at Egerton University, where I gained early foundations, even though that university path was interrupted before completion. I later chose a more deliberate software-engineering route through Moringa School and through the work that has taught me the most: building applications, breaking them, rebuilding them, and learning in public. I tend to aim higher than my current level, which means I am often working on projects that stretch me. That has made me persistent, practical, and serious about becoming a stronger full-stack engineer.",
+    "My path into engineering has not been perfectly linear, but I kept building. I previously studied Computer Science at Egerton University, where I built early foundations in computing. That path was interrupted before completion, and I later pursued independent software engineering study through edX and freeCodeCamp before joining Moringa School for practical full-stack training. The work that has taught me the most is building applications, breaking them, rebuilding them, and learning in public. I tend to aim higher than my current level, which means I am often working on projects that stretch me. That has made me persistent, practical, and serious about becoming a stronger full-stack engineer.",
+  // Replace the file under public/images/profile/ and update this path when a new portrait is provided.
   profileImage: "/images/profile/charity-jepkoech.png",
   profileImageAlt: "Portrait of Charity Jepkoech",
   availability: "Open to full-stack software engineering opportunities",
@@ -58,8 +59,7 @@ export const projects: Project[] = [
       "Solo learning tracker for roadmap progress, streaks, achievements, and local persistence. The project is strongest as a React state and responsive UI exercise.",
     role: "Solo developer",
     stack: ["React", "Tailwind CSS", "Vercel", "local persistence"],
-    problem:
-      "Turn a long learning plan into daily progress a learner can actually see and update.",
+    problem: "Turn a long learning plan into daily progress a learner can actually see and update.",
     architecture: [
       "Componentized React interface separates roadmap, progress, streak, and badge views.",
       "Stateful interactions keep learning progress visible without leaving the page.",
@@ -102,13 +102,20 @@ export const timeline: TimelineItem[] = [
     title: "Software Engineering Training",
     organization: "Moringa School",
     description:
-      "Coursework and project work in React, Python, Flask, databases, testing, and team-based development.",
+      "Practical full-stack software development training covering collaborative projects, API development, database design, testing, and modern engineering workflows with React, Python, Flask, and related tools.",
   },
   {
     label: "Before Moringa",
-    title: "Self-directed software learning",
-    organization: "Independent study",
+    title: "Independent Software Engineering Learning",
+    organization: "edX and freeCodeCamp",
     description:
-      "Built early practice projects before moving into a more structured full-stack training path.",
+      "Self-directed software engineering education through edX and freeCodeCamp, developing programming and web development skills through independent study and practical exercises.",
+  },
+  {
+    label: "Earlier studies",
+    title: "Computer Science Studies",
+    organization: "Egerton University",
+    description:
+      "Previously studied Computer Science at Egerton University, building early foundations in computing. This university path was interrupted before completion and is not represented as a completed degree.",
   },
 ];

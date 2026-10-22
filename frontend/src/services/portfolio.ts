@@ -3,10 +3,15 @@ import type { ContactMessage, PortfolioDocument, Profile, Project, Testimonial }
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
 async function requestJson<T>(path: string, options: RequestInit = {}) {
-  const response = await fetch(`${apiBaseUrl}${path}`, options);
+  let response: Response;
+  try {
+    response = await fetch(`${apiBaseUrl}${path}`, options);
+  } catch {
+    throw new Error(`Network error while requesting ${path}. Check VITE_API_BASE_URL and backend availability.`);
+  }
   const data = (await response.json().catch(() => null)) as T & { error?: string };
   if (!response.ok) {
-    throw new Error(data?.error ?? "Request failed.");
+    throw new Error(data?.error ?? `Request failed (${response.status}) for ${path}.`);
   }
   return data;
 }
