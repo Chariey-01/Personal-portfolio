@@ -5,6 +5,8 @@ from app.config import normalize_database_url
 from app.extensions import db
 from app.models import Project
 from app.routes.contact import recent_submissions
+from app.services.persistence import prepare_production_database
+from app.services.storage import is_safe_storage_key
 from werkzeug.security import generate_password_hash
 
 
@@ -31,9 +33,9 @@ class TestConfig:
     CONTACT_NOTIFICATION_FROM = ""
 
 
-def make_client():
+def make_client(config=TestConfig):
     recent_submissions.clear()
-    app = create_app(TestConfig)
+    app = create_app(config)
     with app.app_context():
         db.create_all()
     return app.test_client()
@@ -56,7 +58,11 @@ def test_health_endpoint():
     client = make_client()
     response = client.get("/api/health")
     assert response.status_code == 200
-    assert response.get_json() == {"status": "ok"}
+    body = response.get_json()
+    assert body["status"] == "ok"
+    assert body["database"] == "sqlite"
+    assert body["storage"] == "local"
+    assert body["durable"] is False
 
 
 def test_contact_validation():
@@ -311,7 +317,12 @@ def test_profile_retrieval_and_admin_update():
 
 
 def test_normalize_database_url_accepts_postgres_scheme():
-    assert normalize_database_url("postgres://user:pass@host/db") == "postgresql://user:pass@host/db"
+    assert normalize_database_url("postgres://user:pass@host/db") == "postgresql+psycopg://user:pass@host/db"
+    assert (
+        normalize_database_url("postgresql://user:pass@host/db?sslmode=require")
+        == "postgresql+psycopg://user:pass@host/db?sslmode=require"
+    )
+    assert normalize_database_url("postgresql+psycopg://user:pass@host/db") == "postgresql+psycopg://user:pass@host/db"
     assert normalize_database_url("sqlite:///portfolio.db") == "sqlite:///portfolio.db"
 
 
@@ -326,6 +337,7 @@ def test_seed_adds_missing_projects_without_replacing_existing_rows():
                 short_description="Keep this description.",
                 technologies=["React"],
                 status="Live",
+                github_url="https://github.com/Chariey-01/custom-aurevia",
             )
         )
         db.session.commit()
@@ -334,5 +346,72 @@ def test_seed_adds_missing_projects_without_replacing_existing_rows():
     by_slug = {project["slug"]: project for project in payload}
     assert by_slug["aurevia"]["title"] == "Custom AuRevia"
     assert by_slug["aurevia"]["summary"] == "Keep this description."
+    assert by_slug["aurevia"]["githubUrl"] == "https://github.com/Chariey-01/custom-aurevia"
+    assert by_slug["aurevia"]["imageUrl"] == "/images/projects/aurevia.jpg"
+    assert by_slug["aurevia"]["liveUrl"] == "https://react-personal-projects-showcase-ap.vercel.app/"
     assert "delivaroo" in by_slug
     assert "campuspulse" in by_slug
+
+
+def test_database_storage_keeps_uploads_out_of_the_filesystem(tmp_path):
+    class DatabaseStorageConfig(TestConfig):
+        SQLALCHEMY_DATABASE_URI = f"sqlite:///{tmp_path / 'portfolio.db'}"
+        STORAGE_BACKEND = "database"
+        UPLOAD_FOLDER = str(tmp_path / "uploads")
+
+    client = make_client(DatabaseStorageConfig)
+    headers = auth_headers(client)
+    uploaded = client.post(
+        "/api/admin/resume",
+        headers=headers,
+        data={"resume": (BytesIO(b"%PDF-1.4\nok"), "resume.pdf")},
+        content_type="multipart/form-data",
+    )
+    assert uploaded.status_code == 201
+    storage_url = uploaded.get_json()["resume"]["storageUrl"]
+    downloaded = client.get(storage_url)
+    assert downloaded.status_code == 200
+    assert downloaded.data.startswith(b"%PDF-")
+    assert downloaded.mimetype == "application/pdf"
+    assert not (tmp_path / "uploads").exists()
+
+    project_id = client.get("/api/projects").get_json()[0]["id"]
+    image = client.post(
+        f"/api/admin/projects/{project_id}/image",
+        headers=headers,
+        data={"image": (BytesIO(b"\xff\xd8\xff" + b"\x00" * 32), "shot.jpg")},
+        content_type="multipart/form-data",
+    )
+    assert image.status_code == 200
+    image_response = client.get(image.get_json()["imageUrl"])
+    assert image_response.status_code == 200
+    assert image_response.data.startswith(b"\xff\xd8\xff")
+    assert client.get("/api/uploads/../secret").status_code == 400
+    assert is_safe_storage_key("../secret") is False
+    assert is_safe_storage_key("documents/resume/file.pdf") is True
+
+
+def test_production_database_requirement_blocks_sqlite_writes():
+    app = create_app(TestConfig)
+    error = prepare_production_database(app)
+    assert error is not None
+    assert "PostgreSQL" in error
+    app.config["PERSISTENCE_ERROR"] = error
+    client = app.test_client()
+    health = client.get("/api/health")
+    assert health.status_code == 503
+    assert health.get_json()["database"] == "unavailable"
+    body = health.get_data(as_text=True)
+    assert "portfolio.db" not in body
+    assert "://" not in body
+    assert client.get("/api/projects").status_code == 503
+    rejected = client.post(
+        "/api/contact",
+        json={
+            "name": "Recruiter",
+            "email": "recruiter@example.com",
+            "inquiryType": "Job Opportunity",
+            "message": "I would like to discuss a full-stack engineering opportunity.",
+        },
+    )
+    assert rejected.status_code == 503

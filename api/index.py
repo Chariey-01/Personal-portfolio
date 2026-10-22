@@ -1,9 +1,8 @@
 """Vercel Python entry for the existing Flask portfolio API.
 
-The production frontend is a static Vite build. Same-origin `/api/*` requests
-reach this module. SQLite on `/tmp` is used only when DATABASE_URL is unset;
-that database does not survive a new instance. Set DATABASE_URL for durable
-storage.
+Same-origin `/api/*` requests reach this module. PostgreSQL is required.
+This entry does not create a temporary SQLite database, and uploads are
+stored in that database instead of the serverless filesystem.
 """
 
 import os
@@ -15,10 +14,10 @@ for path in (BACKEND, ROOT):
     if path not in sys.path:
         sys.path.insert(0, path)
 
-os.environ.setdefault("DATABASE_URL", "sqlite:////tmp/portfolio.db")
+if os.environ.get("DATABASE_URL", "").startswith("postgres"):
+    os.environ["STORAGE_BACKEND"] = "database"
 
-from app.extensions import db
-from app.services.cms import ensure_default_content
+from app.services.persistence import prepare_production_database
 from wsgi import app
 
 
@@ -37,14 +36,4 @@ class ApiPrefixMiddleware:
 
 
 app.wsgi_app = ApiPrefixMiddleware(app.wsgi_app)
-
-
-def prepare_database() -> None:
-    uri = app.config["SQLALCHEMY_DATABASE_URI"]
-    with app.app_context():
-        if uri.startswith("sqlite"):
-            db.create_all()
-        ensure_default_content()
-
-
-prepare_database()
+app.config["PERSISTENCE_ERROR"] = prepare_production_database(app)

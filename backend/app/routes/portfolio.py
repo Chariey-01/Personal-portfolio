@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Blueprint, current_app, jsonify, request, send_from_directory
+from flask import Blueprint, Response, current_app, jsonify, request, send_from_directory
 
 from ..extensions import db
 from ..models import ContactMessage, CoverLetter, Document, Profile, Project, Resume, Testimonial
@@ -17,7 +17,15 @@ from ..services.cms import (
     serialize_testimonial,
     slugify,
 )
-from ..services.storage import UploadValidationError, save_cover_letter_pdf, save_document_pdf, save_image, save_resume_pdf
+from ..services.storage import (
+    UploadValidationError,
+    is_safe_storage_key,
+    read_stored_file,
+    save_cover_letter_pdf,
+    save_document_pdf,
+    save_image,
+    save_resume_pdf,
+)
 
 portfolio_bp = Blueprint("portfolio", __name__)
 
@@ -83,10 +91,18 @@ def current_cover_letter():
 
 @portfolio_bp.get("/uploads/<path:storage_key>")
 def uploaded_file(storage_key):
+    if not is_safe_storage_key(storage_key):
+        return jsonify({"error": "Invalid file path."}), 400
+    if current_app.config.get("STORAGE_BACKEND") == "database":
+        stored = read_stored_file(storage_key)
+        if stored is None:
+            return jsonify({"error": "File not found."}), 404
+        data, content_type = stored
+        return Response(data, mimetype=content_type)
     root = Path(current_app.config["UPLOAD_FOLDER"]).resolve()
     target = (root / storage_key).resolve()
-    if root not in target.parents:
-        return jsonify({"error": "Invalid file path."}), 400
+    if root not in target.parents or not target.is_file():
+        return jsonify({"error": "File not found."}), 404
     return send_from_directory(target.parent, target.name, as_attachment=False)
 
 

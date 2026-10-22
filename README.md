@@ -116,7 +116,7 @@ Copy `.env.example` to `.env` for local backend configuration.
 | Variable | Purpose |
 | --- | --- |
 | `SECRET_KEY` | Flask signing secret |
-| `DATABASE_URL` | SQLAlchemy database URL; PostgreSQL is recommended for production |
+| `DATABASE_URL` | PostgreSQL URL for production. `postgres://` and `postgresql://` both work. Local development falls back to a SQLite file when this is blank |
 | `FRONTEND_URL` | Comma-separated allowed frontend origins |
 | `CONTACT_RATE_LIMIT_SECONDS` | Reserved rate-limit window for contact submissions |
 | `ADMIN_USERNAME` | Single portfolio-owner login name for `/admin` |
@@ -125,7 +125,7 @@ Copy `.env.example` to `.env` for local backend configuration.
 | `UPLOAD_FOLDER` | Local upload directory for development |
 | `MAX_RESUME_BYTES` | Maximum PDF document upload size in bytes |
 | `MAX_IMAGE_BYTES` | Maximum image upload size in bytes |
-| `STORAGE_BACKEND` | `local` for development; use persistent object storage in production |
+| `STORAGE_BACKEND` | `local` for development. Leave unset on Vercel so uploads are stored in PostgreSQL |
 | `SMTP_HOST` | Optional SMTP host for owner contact notifications |
 | `SMTP_PORT` | Optional SMTP port; defaults to `587` |
 | `SMTP_USERNAME` | Optional SMTP username |
@@ -200,11 +200,20 @@ Visitors can choose System, Light, or Dark in the top navigation. System follows
 
 ### Required production environment variables
 
-Set `SECRET_KEY`, `DATABASE_URL`, `FRONTEND_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`, `ADMIN_TOKEN_MAX_AGE_SECONDS`, `MAX_RESUME_BYTES`, `MAX_IMAGE_BYTES`, `STORAGE_BACKEND`, and `VITE_API_BASE_URL`. Configure SMTP variables if you want contact notifications. Keep `CONTACT_RATE_LIMIT_SECONDS` set to a sensible value for the contact form.
+Set these on the Vercel project before relying on the API:
+
+- `DATABASE_URL`: Neon pooled PostgreSQL connection string. Do not commit it.
+- `SECRET_KEY`: long random Flask signing secret.
+- `ADMIN_USERNAME` and `ADMIN_PASSWORD_HASH`: owner login. Generate the hash locally.
+- `FRONTEND_URL`: the public site origin, for example `https://personal-portfolio-tefg.vercel.app`.
+
+Leave `VITE_API_BASE_URL` empty so the browser calls `/api` on the same Vercel origin. Leave `STORAGE_BACKEND` unset. The Vercel entry stores uploads in PostgreSQL. Configure SMTP variables only if contact notifications should be emailed. `CONTACT_RATE_LIMIT_SECONDS` defaults to 60.
+
+`GET /api/health` reports `durable: true` only when PostgreSQL and database storage are both active. It does not include the database host or credentials. Until `DATABASE_URL` is set, API routes return 503 and do not write to SQLite.
 
 ### Production storage requirement
 
-Local filesystem uploads are fine for development. Do not rely on Render or similar ephemeral filesystems for production resume/profile/project uploads. Use persistent object storage such as Cloudinary or another provider, then extend `backend/app/services/storage.py` behind the existing storage boundary without changing the route contracts.
+Development uploads can use the local `instance/uploads` directory. The Vercel function stores PDF and image bytes in the `stored_file` table, so contact messages, resumes, and admin images remain after a new serverless instance starts. Existing upload size limits still apply.
 
 ## Testing
 
@@ -227,17 +236,11 @@ pytest
 
 ## Deployment
 
-Production project loading was failing because the Vercel site is a static Vite build and `VITE_API_BASE_URL` was empty, so the browser requested `/api/projects` on Vercel and received a 404. The Render service at `https://personal-portfolio.onrender.com` is suspended by its owner, so it cannot serve the API until that service is restored.
+The public site and Flask API stay together on Vercel. `api/index.py` serves `/api/*`. On startup it runs the Alembic migrations in `backend/migrations` and inserts any missing seeded projects. Existing project titles, descriptions, and non-empty links are left in place. Blank screenshot, GitHub, and live links are filled from the verified defaults.
 
-`api/index.py` exposes the existing Flask app on the same origin for Vercel. Leave `VITE_API_BASE_URL` empty for that setup. When `DATABASE_URL` is unset, the function uses SQLite under `/tmp`, which is enough to seed and read projects but does not keep contact messages after a new instance starts. Set `DATABASE_URL` to PostgreSQL for durable data. Hosts that provide `postgres://` are normalized to `postgresql://`.
+Use a Neon PostgreSQL database for `DATABASE_URL`. Use the pooled connection string. Neon’s Free plan keeps the data without a monthly fee; its compute sleeps after inactivity, so the first request after a quiet period can be slow. Do not point production at temporary SQLite.
 
-`GET /api/projects` adds any missing seeded project by slug and does not overwrite a project row that is already stored.
-
-Recommended deployment split:
-
-- Frontend: Vercel
-- Backend: Render or another Python host
-- Database: Neon PostgreSQL or managed PostgreSQL
+The old Render service at `https://personal-portfolio.onrender.com` is suspended by its owner. Resuming that free web service would bring back idle spin-down, a filesystem that does not keep uploads, and a separate API origin. Free Render Postgres also expires. A paid Render web service plus Postgres is a reasonable always-on alternative, and it is not required for this portfolio.
 
 Frontend build command:
 
@@ -251,36 +254,16 @@ Frontend output directory:
 dist
 ```
 
-Backend start command:
+Local backend start command:
 
 ```bash
-gunicorn wsgi:app
+cd backend
+flask --app wsgi run
 ```
 
-Before production backend deployment, set real environment variables, run database migrations, and configure `FRONTEND_URL` to the production frontend URL.
+## Manual content still open
 
-## Manual Content Still Needed
-
-The repository did not contain enough verified detail for these requested flagship projects:
-
-- Delivaroo / Send It
-- CAMPUSPULSE
-- DevCrypt
-
-Add real project details for:
-
-- GitHub repositories
-- live deployments
-- problem solved
-- role
-- architecture
-- features
-- authentication and database design
-- deployment notes
-- screenshots
-- technical challenges
-
-Also add verified details for employment, education, certifications, and any metrics. None were invented in this rebuild.
+DevCrypt is not in the public GitHub account, so it is not listed. A replacement profile photograph has not been uploaded for this change. Employment history was not added because none was verified.
 
 ## Design Inspiration
 

@@ -12,19 +12,27 @@ def slugify(value: str) -> str:
     return slug or "project"
 
 
+VERIFIED_LINK_FIELDS = ("image_url", "github_url", "live_url")
+
+
 def ensure_default_content() -> None:
-    """Add missing profile and project rows without overwriting records that already exist."""
+    """Add missing rows and fill blank verified links without replacing owner edits."""
     changed = False
     if Profile.query.first() is None:
         db.session.add(Profile(**DEFAULT_PROFILE))
         changed = True
 
-    existing_slugs = {slug for (slug,) in db.session.query(Project.slug).all()}
     for project in DEFAULT_PROJECTS:
-        if project["slug"] in existing_slugs:
+        existing = Project.query.filter_by(slug=project["slug"]).one_or_none()
+        if existing is None:
+            db.session.add(Project(**project))
+            changed = True
             continue
-        db.session.add(Project(**project))
-        changed = True
+        for field in VERIFIED_LINK_FIELDS:
+            verified = project.get(field)
+            if verified and not str(getattr(existing, field) or "").strip():
+                setattr(existing, field, verified)
+                changed = True
 
     if changed:
         db.session.commit()
