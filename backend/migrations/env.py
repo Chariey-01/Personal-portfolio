@@ -9,10 +9,10 @@ target_db = current_app.extensions["migrate"].db
 
 
 def get_engine():
-    try:
-        return target_db.get_engine()
-    except TypeError:
-        return target_db.engine
+    engine = getattr(target_db, "engine", None)
+    if engine is not None:
+        return engine
+    return target_db.get_engine()
 
 
 def get_metadata():

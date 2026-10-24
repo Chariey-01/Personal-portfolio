@@ -15,7 +15,7 @@ DEFAULT_PROFILE = {
         "I tend to aim higher than my current level, which means I am often working on projects that stretch me. "
         "That has made me persistent, practical, and serious about becoming a stronger full-stack engineer."
     ),
-    "profile_image_url": "/images/profile/charity-jepkoech.png",
+    "profile_image_url": "/images/profile/charity-jepkoech.jpg",
     "profile_image_alt": "Portrait of Charity Jepkoech",
     "availability": "Open to full-stack software engineering opportunities",
     "focus_stack": ["React", "TypeScript", "Flask", "SQLAlchemy", "pytest"],

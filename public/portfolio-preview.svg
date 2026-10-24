@@ -49,7 +49,7 @@
 
   <g filter="url(#softShadow)">
     <rect x="738" y="124" width="344" height="368" rx="24" fill="#22d3ee" opacity="0.14"/>
-    <image href="images/profile/charity-jepkoech.png" x="752" y="138" width="316" height="340" preserveAspectRatio="xMidYMid slice"/>
+    <image href="images/profile/charity-jepkoech.jpg" x="752" y="138" width="316" height="340" preserveAspectRatio="xMidYMid slice"/>
     <rect x="752" y="138" width="316" height="340" rx="18" fill="none" stroke="#67e8f9" stroke-opacity="0.55" stroke-width="2"/>
   </g>
 

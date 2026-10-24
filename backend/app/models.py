@@ -7,6 +7,19 @@ def utc_now():
     return datetime.now(timezone.utc)
 
 
+class StoredFile(db.Model):
+    """Durable upload bytes. Serverless filesystems are wiped between instances."""
+
+    __tablename__ = "stored_file"
+
+    id = db.Column(db.Integer, primary_key=True)
+    storage_key = db.Column(db.String(500), unique=True, nullable=False, index=True)
+    content_type = db.Column(db.String(120), nullable=False)
+    data = db.Column(db.LargeBinary, nullable=False)
+    size_bytes = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=utc_now, nullable=False)
+
+
 class ContactMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
