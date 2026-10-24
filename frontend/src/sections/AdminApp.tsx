@@ -1,5 +1,5 @@
 import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
-import { Archive, Eye, EyeOff, ExternalLink, FileText, Image, Lock, LogOut, Plus, Save, Trash2, Upload } from "lucide-react";
+import { Archive, Download, Eye, EyeOff, ExternalLink, FileText, Image, Lock, LogOut, Plus, Save, Trash2, Upload } from "lucide-react";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { adminRequest, getAdminContactMessages, getAdminDocuments, loginAdmin } from "../services/portfolio";
 import type { ContactMessage, DocumentType, PortfolioDocument, Profile, Project, Testimonial } from "../types/portfolio";
@@ -72,6 +72,10 @@ export function AdminApp() {
           <h1 className="mt-2 text-3xl font-semibold text-white">Admin Dashboard</h1>
         </div>
         <div className="flex flex-wrap items-center gap-3">
+          <a className="button-secondary" href="/portfolio-preview.png" download="charity-jepkoech-portfolio-preview.png">
+            <Download size={18} aria-hidden="true" />
+            Download share preview
+          </a>
           <ThemeToggle />
           <button
             className="button-secondary"

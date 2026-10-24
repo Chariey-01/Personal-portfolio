@@ -322,30 +322,6 @@ textarea {
   background: rgba(5, 8, 16, 0.82);
 }
 
-.portfolio-preview-card {
-  max-width: 31rem;
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(5, 8, 16, 0.72);
-  color: #cbd5e1;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
-}
-
-.portfolio-preview-card:hover {
-  border-color: rgba(34, 211, 238, 0.55);
-  color: #f8fafc;
-  box-shadow: 0 24px 75px rgba(34, 211, 238, 0.13);
-}
-
-.portfolio-preview-card span span:first-child {
-  color: #ffffff;
-}
-
-.portfolio-preview-card span span:last-child {
-  border: 1px solid rgba(103, 232, 249, 0.35);
-  background: rgba(34, 211, 238, 0.12);
-  color: #cffafe;
-}
-
 :root[data-theme="light"] .contact-section {
   background:
     radial-gradient(circle at 16% 18%, rgba(14, 165, 233, 0.12), transparent 25rem),
@@ -362,31 +338,6 @@ textarea {
 
 :root[data-theme="light"] .contact-form .field-label {
   color: #0f172a;
-}
-
-:root[data-theme="light"] .portfolio-preview-card {
-  border-color: rgba(15, 23, 42, 0.12);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 252, 254, 0.88)),
-    rgba(255, 255, 255, 0.9);
-  color: #475569;
-  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.1);
-}
-
-:root[data-theme="light"] .portfolio-preview-card:hover {
-  border-color: rgba(2, 132, 199, 0.3);
-  color: #334155;
-  box-shadow: 0 26px 70px rgba(2, 132, 199, 0.14);
-}
-
-:root[data-theme="light"] .portfolio-preview-card span span:first-child {
-  color: #0f172a;
-}
-
-:root[data-theme="light"] .portfolio-preview-card span span:last-child {
-  border-color: rgba(2, 132, 199, 0.24);
-  background: rgba(14, 165, 233, 0.1);
-  color: #075985;
 }
 
 :root[data-theme="light"] .field-label button {
