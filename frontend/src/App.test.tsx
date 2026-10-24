@@ -109,6 +109,10 @@ describe("portfolio app", () => {
       "src",
       "/images/profile/charity-jepkoech.jpg",
     );
+    expect(screen.queryByRole("link", { name: /view charity's portfolio/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: /portfolio preview/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/visit portfolio/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /send message/i })).toBeInTheDocument();
   });
 
   it("renders navigation and major portfolio sections", async () => {

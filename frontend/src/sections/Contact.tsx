@@ -1,11 +1,10 @@
-import { ArrowUpRight, Github, Linkedin, Loader2, Mail } from "lucide-react";
+import { Github, Linkedin, Loader2, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { SectionHeading } from "../components/SectionHeading";
 import { usePortfolioContent } from "../data/PortfolioContentContext";
 import { inquiryTypes, submitContact } from "../services/contact";
 
 const initialState = { name: "", email: "", inquiryType: "Job Opportunity", message: "" };
-const portfolioUrl = "https://personal-portfolio-tefg.vercel.app";
 
 export function Contact() {
   const { profile } = usePortfolioContent();
@@ -48,7 +47,7 @@ export function Contact() {
 
   return (
     <section id="contact" className="contact-section section-shell">
-      <div className="mx-auto grid max-w-7xl gap-8 px-5 lg:grid-cols-[0.9fr_1.1fr] md:px-8">
+      <div className="mx-auto grid max-w-7xl items-start gap-10 px-5 md:px-8 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
         <div>
           <SectionHeading
             eyebrow="Contact"
@@ -73,30 +72,6 @@ export function Contact() {
               </a>
             ) : null}
           </div>
-          <a
-            className="portfolio-preview-card focus-ring mt-8 block overflow-hidden rounded-lg border transition duration-200 hover:-translate-y-1"
-            href={portfolioUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="View Charity's Portfolio"
-          >
-            <img
-              className="aspect-[1200/630] w-full object-cover"
-              src="/portfolio-preview.png"
-              alt="Charity Jepkoech portfolio preview"
-              loading="lazy"
-            />
-            <span className="block p-5">
-              <span className="block text-xl font-semibold">Charity&apos;s Portfolio</span>
-              <span className="mt-2 block leading-7">
-                A showcase of Charity&apos;s software engineering projects, skills, and work.
-              </span>
-              <span className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold">
-                Visit Portfolio
-                <ArrowUpRight size={16} aria-hidden="true" />
-              </span>
-            </span>
-          </a>
         </div>
 
         <form className="contact-form rounded-lg border p-6 shadow-soft" onSubmit={handleSubmit}>
