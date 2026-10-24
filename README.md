@@ -263,7 +263,7 @@ flask --app wsgi run
 
 ## Manual content still open
 
-DevCrypt is not in the public GitHub account, so it is not listed. A replacement profile photograph has not been uploaded for this change. Employment history was not added because none was verified.
+A replacement profile photograph has not been uploaded for this change. Employment history was not added because none was verified.
 
 ## Design Inspiration
 

@@ -187,7 +187,20 @@ describe("portfolio app", () => {
     vi.spyOn(window, "fetch").mockImplementation(() => Promise.reject(new Error("backend down")));
     render(<App />);
 
-    expect(await screen.findByRole("heading", { name: "Delivaroo" })).toBeInTheDocument();
+    const devcryptCard = (await screen.findByRole("heading", { name: "DevCrypt" })).closest("article");
+    expect(devcryptCard).toBeTruthy();
+    expect(within(devcryptCard as HTMLElement).getByRole("img")).toHaveAttribute("src", "/images/projects/devcrypt.jpg");
+    expect(within(devcryptCard as HTMLElement).getByRole("img")).toHaveAttribute(
+      "alt",
+      expect.stringMatching(/Fragment acquired/i),
+    );
+    expect(within(devcryptCard as HTMLElement).getByRole("link", { name: /code/i })).toHaveAttribute(
+      "href",
+      "https://github.com/Chariey-01/devcrypt-demo",
+    );
+    expect(within(devcryptCard as HTMLElement).queryByRole("link", { name: /live/i })).not.toBeInTheDocument();
+    expect(within(devcryptCard as HTMLElement).getByText(/timed booth challenges/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Delivaroo" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "CampusPulse" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "AuRevia" })).toBeInTheDocument();
     const cliCard = screen.getByRole("heading", { name: "Python Project Management CLI" }).closest("article");

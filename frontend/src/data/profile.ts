@@ -27,6 +27,35 @@ export const profile: Profile = {
 
 export const projects: Project[] = [
   {
+    title: "DevCrypt",
+    slug: "devcrypt",
+    status: "Completed",
+    summary:
+      "Team Capture-the-flag platform with six timed booth challenges, automatic grading, hint penalties, and a scored leaderboard.",
+    role: "Solo full-stack developer",
+    stack: ["Python", "Flask", "React", "PostgreSQL", "Socket.IO"],
+    problem:
+      "Run a live team CTF where booth challenges, scoring, and the final flag stay consistent for players and event staff.",
+    architecture: [
+      "Flask blueprints handle team and staff login, missions, scoring, the cipher, the leaderboard, and event controls.",
+      "The React player UI uses a Monaco editor and receives live updates through Flask-SocketIO.",
+      "PostgreSQL stores the event in production. The local demo uses SQLite, and Alembic manages the schema.",
+    ],
+    highlights: [
+      "Six booths, each with a knowledge check and an auto-graded coding challenge",
+      "Hints, failed submissions, and speed bonuses change the same team score",
+      "Passing a booth awards a flag fragment that a Game Master confirms",
+    ],
+    technicalChallenges: [
+      "Unlocking the code tests only after a team's assigned knowledge-check questions, not the full question pool",
+      "Grading submitted code without letting a failed attempt collect the booth reward twice",
+    ],
+    repoUrl: "https://github.com/Chariey-01/devcrypt-demo",
+    imageUrl: "/images/projects/devcrypt.jpg",
+    imageAlt:
+      "DevCrypt booth challenge after a passed coding submission, showing Fragment acquired, a submitted 4:12 timer, and a score of 215",
+  },
+  {
     title: "Delivaroo",
     slug: "delivaroo",
     status: "Live",
