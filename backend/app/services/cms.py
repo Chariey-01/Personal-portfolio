@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-from ..default_content import DEFAULT_PROFILE, DEFAULT_PROJECTS
+from ..default_content import DEFAULT_PROFILE, DEFAULT_PROJECTS, PROJECT_IMAGE_ALTS
 from ..extensions import db
 from ..models import ContactMessage, CoverLetter, Document, Profile, Project, Resume, Testimonial
 
@@ -89,6 +89,7 @@ def serialize_project(project: Project) -> dict:
         "repoUrl": project.github_url,
         "liveUrl": project.live_url,
         "imageUrl": project.image_url,
+        "imageAlt": PROJECT_IMAGE_ALTS.get(project.image_url),
         "featured": project.featured,
         "status": project.status,
         "displayOrder": project.display_order,

@@ -159,10 +159,22 @@ def test_public_projects_seed_existing_content_and_statuses():
     assert "Delivaroo" in titles
     assert "CampusPulse" in titles
     assert "Learning Roadmap App" in titles
-    live_urls = {project["title"]: project["liveUrl"] for project in response.get_json()}
+    projects = response.get_json()
+    live_urls = {project["title"]: project["liveUrl"] for project in projects}
     assert live_urls["Delivaroo"] == "https://delivaroo.vercel.app"
     assert live_urls["CampusPulse"] == "https://campuspulse-two.vercel.app"
     assert all(not (url or "").endswith(".onrender.com") for url in live_urls.values())
+    images = {project["slug"]: project["imageUrl"] for project in projects}
+    assert images["delivaroo"] == "/images/projects/delivaroo.jpg"
+    assert images["campuspulse"] == "/images/projects/campuspulse.jpg"
+    assert images["aurevia"] == "/images/projects/aurevia.jpg"
+    assert images["learning-roadmap-app"] == "/images/projects/roadmap.jpg"
+    cli = next(project for project in projects if project["slug"] == "python-project-management-cli")
+    assert cli["imageUrl"] == "/images/projects/python-cli.jpg"
+    assert cli["githubUrl"] == "https://github.com/Chariey-01/Python-Project-Management-CLI"
+    assert not cli["liveUrl"]
+    assert "User added successfully" in cli["imageAlt"]
+    assert "add-user" in cli["imageAlt"]
 
 
 def test_resume_valid_pdf_upload_invalid_file_and_size_validation():

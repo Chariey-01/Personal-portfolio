@@ -150,6 +150,7 @@ DEFAULT_PROJECTS = [
         "role": "Backend-focused developer",
         "technologies": ["Python", "JSON"],
         "github_url": "https://github.com/Chariey-01/Python-Project-Management-CLI",
+        "image_url": "/images/projects/python-cli.jpg",
         "problem": "Model users, projects, and tasks in Python while keeping those rules separate from command-line prompts.",
         "architecture": [
             "Models for users, projects, and tasks sit apart from the CLI entry point.",
@@ -163,3 +164,11 @@ DEFAULT_PROJECTS = [
         ],
     },
 ]
+
+# Alt text is presentation copy for a known screenshot, not a database column.
+PROJECT_IMAGE_ALTS = {
+    "/images/projects/python-cli.jpg": (
+        "Terminal screenshot of the Python Project Management CLI showing the add-user command, "
+        "the message User added successfully, and the usage menu"
+    ),
+}

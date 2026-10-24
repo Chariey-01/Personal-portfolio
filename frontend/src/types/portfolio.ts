@@ -42,6 +42,7 @@ export type Project = {
   repoUrl?: string;
   liveUrl?: string;
   imageUrl?: string;
+  imageAlt?: string;
   featured?: boolean;
   displayOrder?: number;
   archived?: boolean;

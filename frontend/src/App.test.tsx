@@ -190,6 +190,22 @@ describe("portfolio app", () => {
     expect(await screen.findByRole("heading", { name: "Delivaroo" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "CampusPulse" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "AuRevia" })).toBeInTheDocument();
+    const cliCard = screen.getByRole("heading", { name: "Python Project Management CLI" }).closest("article");
+    expect(cliCard).toBeTruthy();
+    expect(within(cliCard as HTMLElement).getByRole("img")).toHaveAttribute("src", "/images/projects/python-cli.jpg");
+    expect(within(cliCard as HTMLElement).getByRole("img")).toHaveAttribute(
+      "alt",
+      expect.stringMatching(/add-user command/i),
+    );
+    expect(within(cliCard as HTMLElement).getByRole("link", { name: /code/i })).toHaveAttribute(
+      "href",
+      "https://github.com/Chariey-01/Python-Project-Management-CLI",
+    );
+    expect(within(cliCard as HTMLElement).queryByRole("link", { name: /live/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /delivaroo application interface/i })).toHaveAttribute(
+      "src",
+      "/images/projects/delivaroo.jpg",
+    );
     expect(screen.getByText(/portfolio API is unavailable/i)).toBeInTheDocument();
   });
 
