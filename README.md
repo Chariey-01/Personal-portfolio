@@ -205,7 +205,7 @@ Set these on the Vercel project before relying on the API:
 - `DATABASE_URL`: Neon pooled PostgreSQL connection string. Do not commit it.
 - `SECRET_KEY`: long random Flask signing secret.
 - `ADMIN_USERNAME` and `ADMIN_PASSWORD_HASH`: owner login. Generate the hash locally.
-- `FRONTEND_URL`: the public site origin, for example `https://personal-portfolio-tefg.vercel.app`.
+- `FRONTEND_URL`: the public site origin. The canonical origin in `index.html` is `https://personal-portfolio-tefg.vercel.app/`.
 
 Leave `VITE_API_BASE_URL` empty so the browser calls `/api` on the same Vercel origin. Leave `STORAGE_BACKEND` unset. The Vercel entry stores uploads in PostgreSQL. Configure SMTP variables only if contact notifications should be emailed. `CONTACT_RATE_LIMIT_SECONDS` defaults to 60.
 

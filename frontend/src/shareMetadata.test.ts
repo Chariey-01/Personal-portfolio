@@ -1,6 +1,4 @@
-import { readFileSync } from "node:fs";
-
-const html = readFileSync(new URL("../../index.html", import.meta.url), "utf8");
+import html from "../../index.html?raw";
 const rawHead = html.slice(html.indexOf("<head>"), html.indexOf("</head>"));
 const head = rawHead.replace(/\s+/g, " ");
 const site = "https://personal-portfolio-tefg.vercel.app/";
@@ -16,7 +14,8 @@ describe("share metadata in the initial HTML", () => {
     const beforeScript = rawHead.slice(0, rawHead.indexOf("<script"));
 
     expect(meta("property", "og:title")).toEqual(["Charity Jepkoech | Full-Stack Software Engineer"]);
-    expect(meta("property", "og:description")[0]).toContain("Full-Stack Software Engineer");
+    expect(meta("property", "og:description")[0]).toContain("full-stack software engineer");
+    expect(meta("property", "og:description")[0]).toContain("React, TypeScript, Flask, and PostgreSQL");
     expect(meta("property", "og:description")).toHaveLength(1);
     expect(meta("property", "og:url")).toEqual([site]);
     expect(meta("property", "og:image")).toEqual([image]);
