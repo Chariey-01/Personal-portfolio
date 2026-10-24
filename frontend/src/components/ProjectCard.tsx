@@ -14,6 +14,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const repoUrl = project.repoUrl ?? project.githubUrl;
   const status = project.status === "shipped" ? "Live" : project.status.replace("-", " ");
   const showImage = Boolean(project.imageUrl) && !imageFailed;
+  const imageAlt = project.imageAlt?.trim() || `${project.title} application interface`;
 
   return (
     <article className="project-card group flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.045] shadow-soft backdrop-blur transition duration-200 hover:-translate-y-1 hover:border-cyan-300/60">
@@ -23,7 +24,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <img
               className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]"
               src={project.imageUrl}
-              alt={`${project.title} application interface`}
+              alt={imageAlt}
               loading="lazy"
               decoding="async"
               onError={() => setImageFailed(true)}

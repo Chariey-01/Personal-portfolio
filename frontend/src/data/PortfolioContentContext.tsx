@@ -26,8 +26,14 @@ function normalizeProject(raw: Project): Project {
     raw.caseStudy?.trim() ||
     "";
 
+  const bundled = fallbackProjects.find((project) => project.slug && project.slug === raw.slug);
+  const imageAlt =
+    raw.imageAlt?.trim() ||
+    (raw.imageUrl && raw.imageUrl === bundled?.imageUrl ? bundled.imageAlt : undefined);
+
   return {
     ...raw,
+    imageAlt,
     stack,
     technologies: stack,
     summary,

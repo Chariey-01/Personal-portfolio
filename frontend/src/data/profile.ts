@@ -146,6 +146,9 @@ export const projects: Project[] = [
       "Keeping the CLI prompts thin so the models stay testable",
     ],
     repoUrl: "https://github.com/Chariey-01/Python-Project-Management-CLI",
+    imageUrl: "/images/projects/python-cli.jpg",
+    imageAlt:
+      "Terminal screenshot of the Python Project Management CLI showing the add-user command, the message User added successfully, and the usage menu",
   },
 ];
 
