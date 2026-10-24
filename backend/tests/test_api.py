@@ -169,6 +169,15 @@ def test_public_projects_seed_existing_content_and_statuses():
     assert images["campuspulse"] == "/images/projects/campuspulse.jpg"
     assert images["aurevia"] == "/images/projects/aurevia.jpg"
     assert images["learning-roadmap-app"] == "/images/projects/roadmap.jpg"
+    assert projects[0]["slug"] == "devcrypt"
+    devcrypt = projects[0]
+    assert devcrypt["title"] == "DevCrypt"
+    assert devcrypt["imageUrl"] == "/images/projects/devcrypt.jpg"
+    assert devcrypt["githubUrl"] == "https://github.com/Chariey-01/devcrypt-demo"
+    assert not devcrypt["liveUrl"]
+    assert "Fragment acquired" in devcrypt["imageAlt"]
+    assert devcrypt["stack"] == ["Python", "Flask", "React", "PostgreSQL", "Socket.IO"]
+    assert "vault" not in devcrypt["summary"].lower()
     cli = next(project for project in projects if project["slug"] == "python-project-management-cli")
     assert cli["imageUrl"] == "/images/projects/python-cli.jpg"
     assert cli["githubUrl"] == "https://github.com/Chariey-01/Python-Project-Management-CLI"

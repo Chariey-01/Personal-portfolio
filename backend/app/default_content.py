@@ -28,6 +28,37 @@ DEFAULT_PROFILE = {
 
 DEFAULT_PROJECTS = [
     {
+        "title": "DevCrypt",
+        "slug": "devcrypt",
+        "status": "Completed",
+        "featured": True,
+        "display_order": 0,
+        "short_description": (
+            "Team Capture-the-flag platform with six timed booth challenges, automatic grading, "
+            "hint penalties, and a scored leaderboard."
+        ),
+        "case_study": "Booth challenges, scoring, and the final flag stay on the server.",
+        "role": "Solo full-stack developer",
+        "technologies": ["Python", "Flask", "React", "PostgreSQL", "Socket.IO"],
+        "github_url": "https://github.com/Chariey-01/devcrypt-demo",
+        "image_url": "/images/projects/devcrypt.jpg",
+        "problem": "Run a live team CTF where booth challenges, scoring, and the final flag stay consistent for players and event staff.",
+        "architecture": [
+            "Flask blueprints handle team and staff login, missions, scoring, the cipher, the leaderboard, and event controls.",
+            "The React player UI uses a Monaco editor and receives live updates through Flask-SocketIO.",
+            "PostgreSQL stores the event in production. The local demo uses SQLite, and Alembic manages the schema.",
+        ],
+        "highlights": [
+            "Six booths, each with a knowledge check and an auto-graded coding challenge",
+            "Hints, failed submissions, and speed bonuses change the same team score",
+            "Passing a booth awards a flag fragment that a Game Master confirms",
+        ],
+        "technical_challenges": [
+            "Unlocking the code tests only after a team's assigned knowledge-check questions, not the full question pool",
+            "Grading submitted code without letting a failed attempt collect the booth reward twice",
+        ],
+    },
+    {
         "title": "Delivaroo",
         "slug": "delivaroo",
         "status": "Live",
@@ -167,6 +198,10 @@ DEFAULT_PROJECTS = [
 
 # Alt text is presentation copy for a known screenshot, not a database column.
 PROJECT_IMAGE_ALTS = {
+    "/images/projects/devcrypt.jpg": (
+        "DevCrypt booth challenge after a passed coding submission, showing Fragment acquired, "
+        "a submitted 4:12 timer, and a score of 215"
+    ),
     "/images/projects/python-cli.jpg": (
         "Terminal screenshot of the Python Project Management CLI showing the add-user command, "
         "the message User added successfully, and the usage menu"
