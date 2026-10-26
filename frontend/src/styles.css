@@ -93,6 +93,15 @@ textarea {
     @apply w-full rounded-md border border-white/10 bg-white/[0.04] px-4 py-3 text-base text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/30;
   }
 
+  select.field {
+    color-scheme: dark;
+  }
+
+  select.field option {
+    background-color: #ffffff;
+    color: #0f172a;
+  }
+
   .timeline-card {
     @apply grid gap-4 rounded-lg border border-white/10 bg-white/[0.04] p-5 shadow-soft transition duration-200 hover:border-cyan-300/45 md:grid-cols-[12rem_1fr];
   }
@@ -158,6 +167,10 @@ textarea {
   border-color: rgba(15, 23, 42, 0.14);
   background-color: rgba(255, 255, 255, 0.86);
   color: #0f172a;
+}
+
+:root[data-theme="light"] select.field {
+  color-scheme: light;
 }
 
 :root[data-theme="light"] .field::placeholder {
