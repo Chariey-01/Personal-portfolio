@@ -1,18 +1,11 @@
-"""Vercel Python entry for the existing Flask portfolio API.
+"""Vercel service entry for the Flask portfolio API.
 
-Same-origin `/api/*` requests reach this module. PostgreSQL is required.
-This entry does not create a temporary SQLite database, and uploads are
-stored in that database instead of the serverless filesystem.
+Public requests under /api reach this service with their original path.
+Flask routes are already mounted at /api. The prefix middleware also accepts
+a path that arrives without that prefix.
 """
 
 import os
-import sys
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BACKEND = os.path.join(ROOT, "backend")
-for path in (BACKEND, ROOT):
-    if path not in sys.path:
-        sys.path.insert(0, path)
 
 if os.environ.get("DATABASE_URL", "").startswith("postgres"):
     os.environ["STORAGE_BACKEND"] = "database"
