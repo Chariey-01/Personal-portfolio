@@ -236,7 +236,9 @@ pytest
 
 ## Deployment
 
-The public site and Flask API stay together on Vercel. `api/index.py` serves `/api/*`. On startup it runs the Alembic migrations in `backend/migrations` and inserts any missing seeded projects. Existing project titles, descriptions, and non-empty links are left in place. Blank screenshot, GitHub, and live links are filled from the verified defaults.
+The public site and Flask API stay together on one Vercel project with two services. `vercel.json` sends `/api/(.*)` to the `backend` service and every other path to the `frontend` service. `backend/vercel_entry.py` is the Flask entry. On startup it runs the Alembic migrations in `backend/migrations` and inserts any missing seeded projects. Existing project titles, descriptions, and non-empty links are left in place. Blank screenshot, GitHub, and live links are filled from the verified defaults.
+
+The browser calls `/api` on the same origin. There is no service binding: the Vite app is static, and neither service makes a server-side request to the other. Leave `VITE_API_BASE_URL` empty.
 
 Use a Neon PostgreSQL database for `DATABASE_URL`. Use the pooled connection string. Neon’s Free plan keeps the data without a monthly fee; its compute sleeps after inactivity, so the first request after a quiet period can be slow. Do not point production at temporary SQLite.
 
